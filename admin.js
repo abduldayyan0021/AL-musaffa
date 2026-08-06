@@ -1,3 +1,16 @@
+// SUPABASE CONFIGURATION
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+let supabaseClient = null;
+
+try {
+  if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_KEY && SUPABASE_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+} catch (e) {
+  console.warn('Supabase JS SDK not loaded or config invalid. Running in local fallback mode.', e);
+}
+
 // Admin Panel State
 let products = [];
 let orders = [];
@@ -267,102 +280,205 @@ const defaultOrders = [
 ];
 
 // Load settings, products, and orders on page launch
-document.addEventListener('DOMContentLoaded', () => {
-  loadAdminState();
+document.addEventListener('DOMContentLoaded', async () => {
   initAdminDashboard();
+  await loadAdminState();
 });
 
-function loadAdminState() {
-  // Load Settings
-  const savedSettings = localStorage.getItem('al_musafa_settings');
-  if (savedSettings) {
-    settings = JSON.parse(savedSettings);
-    if (settings.storeName === 'AL musafa' || settings.storeName === 'Al Musafa' || settings.storeName === 'AL mUSAFFA') {
-      settings.storeName = 'AL MUSAFFA';
-      localStorage.setItem('al_musafa_settings', JSON.stringify(settings));
+async function loadAdminState() {
+  if (supabaseClient) {
+    try {
+      // 1. Load Settings
+      const { data: dbSettings, error: errSettings } = await supabaseClient.from('settings').select('*').single();
+      if (!errSettings && dbSettings) {
+        settings = {
+          storeName: dbSettings.store_name,
+          email: dbSettings.email,
+          whatsapp: dbSettings.whatsapp,
+          address: dbSettings.address,
+          shippingLimit: dbSettings.shipping_limit,
+          shippingCharge: dbSettings.shipping_charge
+        };
+      } else {
+        loadSettingsFallback();
+      }
+
+      // 2. Load Categories
+      const { data: dbCategories, error: errCategories } = await supabaseClient.from('categories').select('*').order('id', { ascending: true });
+      if (!errCategories && dbCategories && dbCategories.length > 0) {
+        categories = dbCategories.map(c => ({
+          name: c.name,
+          filter: c.filter,
+          img: c.img
+        }));
+      } else {
+        loadCategoriesFallback();
+      }
+
+      // 3. Load Products
+      const { data: dbProducts, error: errProducts } = await supabaseClient.from('products').select('*');
+      if (!errProducts && dbProducts && dbProducts.length > 0) {
+        products = dbProducts.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          description: p.description,
+          rating: parseFloat(p.rating),
+          reviews: p.reviews,
+          image: p.image,
+          variants: typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants,
+          benefits: p.benefits,
+          inStock: p.in_stock,
+          featured: p.featured
+        }));
+      } else {
+        loadProductsFallback();
+      }
+
+      // 4. Load Orders
+      const { data: dbOrders, error: errOrders } = await supabaseClient.from('orders').select('*').order('date', { ascending: false });
+      if (!errOrders && dbOrders) {
+        orders = dbOrders.map(o => ({
+          orderId: o.order_id,
+          customer: typeof o.customer === 'string' ? JSON.parse(o.customer) : o.customer,
+          items: typeof o.items === 'string' ? JSON.parse(o.items) : o.items,
+          subtotal: o.subtotal,
+          shipping: o.shipping,
+          total: o.total,
+          paymentMethod: o.payment_method,
+          status: o.status,
+          date: o.date
+        }));
+      } else {
+        loadOrdersFallback();
+      }
+
+      // 5. Load Banners
+      const { data: dbBanners, error: errBanners } = await supabaseClient.from('banners').select('*').single();
+      if (!errBanners && dbBanners) {
+        banners = {
+          hero: typeof dbBanners.hero === 'string' ? JSON.parse(dbBanners.hero) : dbBanners.hero,
+          promo: typeof dbBanners.promo === 'string' ? JSON.parse(dbBanners.promo) : dbBanners.promo
+        };
+      } else {
+        loadBannersFallback();
+      }
+
+      // 6. Load Testimonials
+      const { data: dbTestimonials, error: errTestimonials } = await supabaseClient.from('testimonials').select('*').order('id', { ascending: true });
+      if (!errTestimonials && dbTestimonials && dbTestimonials.length > 0) {
+        testimonials = dbTestimonials.map(t => ({
+          rating: t.rating,
+          text: t.text,
+          customer: t.customer,
+          location: t.location
+        }));
+      } else {
+        loadTestimonialsFallback();
+      }
+
+      // 7. Load Blogs
+      const { data: dbBlogs, error: errBlogs } = await supabaseClient.from('blogs').select('*').order('id', { ascending: true });
+      if (!errBlogs && dbBlogs && dbBlogs.length > 0) {
+        blogs = dbBlogs.map(b => ({
+          title: b.title,
+          excerpt: b.excerpt,
+          content: b.content,
+          image: b.image,
+          date: b.date,
+          readTime: b.read_time
+        }));
+      } else {
+        loadBlogsFallback();
+      }
+    } catch (e) {
+      console.warn('Error loading from Supabase, loading fallback state:', e);
+      loadAllFallbacks();
     }
   } else {
-    settings = defaultSettings;
-    localStorage.setItem('al_musafa_settings', JSON.stringify(settings));
+    loadAllFallbacks();
   }
 
   // Set store name labels in admin panel
   document.getElementById('admin-store-name').innerText = settings.storeName;
 
-  // Load Categories
+  // Run initial renderings once state has finished loading
+  populateProductCategoryDropdown();
+  renderDashboardStats();
+  renderRecentOrders();
+  renderOrdersTable();
+  renderInventoryTable();
+  renderCategoriesTable();
+  renderBannersTable();
+  renderTestimonialsTable();
+  renderBlogsTable();
+  populateSettingsForm();
+}
+
+function loadSettingsFallback() {
+  const savedSettings = localStorage.getItem('al_musafa_settings');
+  if (savedSettings) {
+    settings = JSON.parse(savedSettings);
+  } else {
+    settings = defaultSettings;
+  }
+}
+function loadCategoriesFallback() {
   const savedCategories = localStorage.getItem('al_musafa_categories');
   if (savedCategories) {
     categories = JSON.parse(savedCategories);
-    if (categories.length !== 4 || !categories.some(c => c.filter === 'sidr') || categories.some(c => c.name === 'Pure Delights')) {
-      categories = defaultCategories;
-      localStorage.setItem('al_musafa_categories', JSON.stringify(categories));
-    }
   } else {
     categories = defaultCategories;
-    localStorage.setItem('al_musafa_categories', JSON.stringify(categories));
   }
-
-  // Load Products
+}
+function loadProductsFallback() {
   const savedProducts = localStorage.getItem('al_musafa_products');
   if (savedProducts) {
     products = JSON.parse(savedProducts);
-    const validFilters = ['honey', 'sidr', 'delight', 'gift'];
-    let needsProductsSave = false;
-    const originalLength = products.length;
-    products = products.filter(p => {
-      if (p.id === 'sidr-honey' && p.category !== 'sidr') {
-        p.category = 'sidr';
-        needsProductsSave = true;
-      }
-      return validFilters.includes(p.category);
-    });
-    if (products.length !== originalLength || needsProductsSave) {
-      localStorage.setItem('al_musafa_products', JSON.stringify(products));
-    }
   } else {
     products = defaultProducts;
-    localStorage.setItem('al_musafa_products', JSON.stringify(products));
   }
-
-  // Load Orders
+}
+function loadOrdersFallback() {
   const savedOrders = localStorage.getItem('al_musafa_orders');
   if (savedOrders) {
     orders = JSON.parse(savedOrders);
   } else {
     orders = defaultOrders;
-    localStorage.setItem('al_musafa_orders', JSON.stringify(orders));
   }
-
-  // Load Banners
+}
+function loadBannersFallback() {
   const savedBanners = localStorage.getItem('al_musafa_banners');
   if (savedBanners) {
     banners = JSON.parse(savedBanners);
   } else {
     banners = defaultBanners;
-    localStorage.setItem('al_musafa_banners', JSON.stringify(banners));
   }
-
-  // Load Testimonials
+}
+function loadTestimonialsFallback() {
   const savedTestimonials = localStorage.getItem('al_musafa_testimonials');
   if (savedTestimonials) {
     testimonials = JSON.parse(savedTestimonials);
   } else {
     testimonials = defaultTestimonials;
-    localStorage.setItem('al_musafa_testimonials', JSON.stringify(testimonials));
   }
-
-  // Load Blogs
+}
+function loadBlogsFallback() {
   const savedBlogs = localStorage.getItem('al_musafa_blogs');
   if (savedBlogs) {
     blogs = JSON.parse(savedBlogs);
-    if (!blogs.every(b => b.content)) {
-      blogs = defaultBlogs;
-      localStorage.setItem('al_musafa_blogs', JSON.stringify(blogs));
-    }
   } else {
     blogs = defaultBlogs;
-    localStorage.setItem('al_musafa_blogs', JSON.stringify(blogs));
   }
+}
+function loadAllFallbacks() {
+  loadSettingsFallback();
+  loadCategoriesFallback();
+  loadProductsFallback();
+  loadOrdersFallback();
+  loadBannersFallback();
+  loadTestimonialsFallback();
+  loadBlogsFallback();
 }
 
 function initAdminDashboard() {
@@ -593,18 +709,6 @@ function initAdminDashboard() {
       }
     });
   }
-
-  // 10. Initial Renderings & Dropdown Population
-  populateProductCategoryDropdown();
-  renderDashboardStats();
-  renderRecentOrders();
-  renderOrdersTable();
-  renderInventoryTable();
-  renderCategoriesTable();
-  renderBannersTable();
-  renderTestimonialsTable();
-  renderBlogsTable();
-  populateSettingsForm();
 }
 
 // TAB NAVIGATION CONTROL
@@ -757,7 +861,7 @@ window.updateOrderStatus = function(orderId, newStatus) {
   if (index === -1) return;
 
   orders[index].status = newStatus;
-  localStorage.setItem('al_musafa_orders', JSON.stringify(orders));
+  saveToDb('al_musafa_orders', orders);
   
   renderDashboardStats();
   renderOrdersTable();
@@ -767,7 +871,7 @@ window.deleteOrder = function(orderId) {
   if (!confirm(`Are you sure you want to delete order ${orderId}?`)) return;
 
   orders = orders.filter(o => o.orderId !== orderId);
-  localStorage.setItem('al_musafa_orders', JSON.stringify(orders));
+  saveToDb('al_musafa_orders', orders);
 
   renderDashboardStats();
   renderOrdersTable();
@@ -820,7 +924,7 @@ function renderInventoryTable() {
 
 window.toggleStockStatus = function(index) {
   products[index].inStock = !products[index].inStock;
-  localStorage.setItem('al_musafa_products', JSON.stringify(products));
+  saveToDb('al_musafa_products', products);
   renderInventoryTable();
 };
 
@@ -828,7 +932,7 @@ window.deleteProduct = function(index) {
   if (!confirm(`Are you sure you want to delete "${products[index].name}"?`)) return;
 
   products.splice(index, 1);
-  localStorage.setItem('al_musafa_products', JSON.stringify(products));
+  saveToDb('al_musafa_products', products);
   
   renderDashboardStats();
   renderInventoryTable();
@@ -1003,7 +1107,7 @@ function handleProductSubmit(e) {
   }
 
   // Save State
-  localStorage.setItem('al_musafa_products', JSON.stringify(products));
+  saveToDb('al_musafa_products', products);
 
   closeProductModal();
   renderInventoryTable();
@@ -1032,7 +1136,7 @@ function handleSettingsSubmit(e) {
     address: document.getElementById('settings-address').value.trim()
   };
 
-  localStorage.setItem('al_musafa_settings', JSON.stringify(settings));
+  saveToDb('al_musafa_settings', settings);
   document.getElementById('admin-store-name').innerText = settings.storeName;
 
   alert('Store configurations saved successfully!');
@@ -1172,7 +1276,7 @@ function handleCategorySubmit(e) {
           products[idx].category = filter;
         }
       });
-      localStorage.setItem('al_musafa_products', JSON.stringify(products));
+      saveToDb('al_musafa_products', products);
     }
 
     categories[indexVal] = categoryData;
@@ -1180,7 +1284,7 @@ function handleCategorySubmit(e) {
     categories.push(categoryData);
   }
 
-  localStorage.setItem('al_musafa_categories', JSON.stringify(categories));
+  saveToDb('al_musafa_categories', categories);
 
   closeCategoryModal();
   renderCategoriesTable();
@@ -1195,7 +1299,7 @@ window.deleteCategory = function(index) {
   }
 
   categories.splice(index, 1);
-  localStorage.setItem('al_musafa_categories', JSON.stringify(categories));
+  saveToDb('al_musafa_categories', categories);
 
   renderCategoriesTable();
   populateProductCategoryDropdown();
@@ -1405,7 +1509,7 @@ function handleBannerSubmit(e) {
     banners[type].push(bannerData);
   }
   
-  localStorage.setItem('al_musafa_banners', JSON.stringify(banners));
+  saveToDb('al_musafa_banners', banners);
   closeBannerModal();
   renderBannersTable();
 }
@@ -1419,7 +1523,7 @@ window.deleteBanner = function(type, index) {
   }
   
   banners[type].splice(index, 1);
-  localStorage.setItem('al_musafa_banners', JSON.stringify(banners));
+  saveToDb('al_musafa_banners', banners);
   renderBannersTable();
 };
 
@@ -1504,7 +1608,7 @@ function handleTestimonialSubmit(e) {
     testimonials.push(tData);
   }
 
-  localStorage.setItem('al_musafa_testimonials', JSON.stringify(testimonials));
+  saveToDb('al_musafa_testimonials', testimonials);
   closeTestimonialModal();
   renderTestimonialsTable();
 }
@@ -1516,7 +1620,7 @@ window.deleteTestimonial = function(index) {
   }
 
   testimonials.splice(index, 1);
-  localStorage.setItem('al_musafa_testimonials', JSON.stringify(testimonials));
+  saveToDb('al_musafa_testimonials', testimonials);
   renderTestimonialsTable();
 };
 
@@ -1636,7 +1740,7 @@ function handleBlogSubmit(e) {
     blogs.push(bData);
   }
 
-  localStorage.setItem('al_musafa_blogs', JSON.stringify(blogs));
+  saveToDb('al_musafa_blogs', blogs);
   closeBlogModalAdmin();
   renderBlogsTable();
 }
@@ -1648,6 +1752,94 @@ window.deleteBlog = function(index) {
   }
 
   blogs.splice(index, 1);
-  localStorage.setItem('al_musafa_blogs', JSON.stringify(blogs));
+  saveToDb('al_musafa_blogs', blogs);
   renderBlogsTable();
+};
+
+window.saveToDb = async function(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+  if (!supabaseClient) return;
+
+  try {
+    if (key === 'al_musafa_settings') {
+      await supabaseClient.from('settings').update({
+        store_name: value.storeName,
+        email: value.email,
+        whatsapp: value.whatsapp,
+        address: value.address,
+        shipping_limit: value.shippingLimit,
+        shipping_charge: value.shippingCharge
+      }).eq('id', 1);
+    } else if (key === 'al_musafa_categories') {
+      await supabaseClient.from('categories').delete().neq('id', 0);
+      if (value.length > 0) {
+        await supabaseClient.from('categories').insert(value.map(c => ({
+          name: c.name,
+          filter: c.filter,
+          img: c.img
+        })));
+      }
+    } else if (key === 'al_musafa_products') {
+      await supabaseClient.from('products').delete().neq('id', 'dummy');
+      if (value.length > 0) {
+        await supabaseClient.from('products').insert(value.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          description: p.description,
+          rating: p.rating,
+          reviews: p.reviews,
+          image: p.image,
+          variants: p.variants,
+          benefits: p.benefits,
+          in_stock: p.inStock,
+          featured: p.featured
+        })));
+      }
+    } else if (key === 'al_musafa_banners') {
+      await supabaseClient.from('banners').update({
+        hero: value.hero,
+        promo: value.promo
+      }).eq('id', 1);
+    } else if (key === 'al_musafa_testimonials') {
+      await supabaseClient.from('testimonials').delete().neq('id', 0);
+      if (value.length > 0) {
+        await supabaseClient.from('testimonials').insert(value.map(t => ({
+          rating: t.rating,
+          text: t.text,
+          customer: t.customer,
+          location: t.location
+        })));
+      }
+    } else if (key === 'al_musafa_blogs') {
+      await supabaseClient.from('blogs').delete().neq('id', 0);
+      if (value.length > 0) {
+        await supabaseClient.from('blogs').insert(value.map(b => ({
+          title: b.title,
+          excerpt: b.excerpt,
+          content: b.content,
+          image: b.image,
+          date: b.date,
+          read_time: b.readTime
+        })));
+      }
+    } else if (key === 'al_musafa_orders') {
+      await supabaseClient.from('orders').delete().neq('order_id', 'dummy');
+      if (value.length > 0) {
+        await supabaseClient.from('orders').insert(value.map(o => ({
+          order_id: o.orderId,
+          customer: o.customer,
+          items: o.items,
+          subtotal: o.subtotal,
+          shipping: o.shipping,
+          total: o.total,
+          payment_method: o.paymentMethod,
+          status: o.status,
+          date: o.date
+        })));
+      }
+    }
+  } catch (err) {
+    console.error('Supabase save failed for key:', key, err);
+  }
 };

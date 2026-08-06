@@ -1,3 +1,16 @@
+// SUPABASE CONFIGURATION
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+let supabaseClient = null;
+
+try {
+  if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_KEY && SUPABASE_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+} catch (e) {
+  console.warn('Supabase JS SDK not loaded or config invalid. Running in local fallback mode.', e);
+}
+
 // Product Database
 const defaultProducts = [
   {
@@ -140,54 +153,6 @@ const defaultCategories = [
   { name: 'Gift Boxes', filter: 'gift', img: 'images/sidr_honey.png' }
 ];
 
-// Load categories from LocalStorage or fallback to default
-let categories = JSON.parse(localStorage.getItem('al_musafa_categories')) || defaultCategories;
-// Migration: If categories in localStorage are the old ones (length != 4), or have old name 'Pure Delights', overwrite them
-if (!localStorage.getItem('al_musafa_categories') || categories.length !== 4 || !categories.some(c => c.filter === 'sidr') || categories.some(c => c.name === 'Pure Delights')) {
-  categories = defaultCategories;
-  localStorage.setItem('al_musafa_categories', JSON.stringify(categories));
-}
-
-// Load products from LocalStorage or fallback to default
-let products = JSON.parse(localStorage.getItem('al_musafa_products')) || defaultProducts;
-const validFilters = ['honey', 'sidr', 'delight', 'gift'];
-let needsProductsSave = false;
-
-if (!localStorage.getItem('al_musafa_products')) {
-  products = defaultProducts;
-  localStorage.setItem('al_musafa_products', JSON.stringify(products));
-} else {
-  const originalLength = products.length;
-  products = products.filter(p => {
-    if (p.id === 'sidr-honey' && p.category !== 'sidr') {
-      p.category = 'sidr';
-      needsProductsSave = true;
-    }
-    return validFilters.includes(p.category);
-  });
-  if (products.length !== originalLength || needsProductsSave) {
-    localStorage.setItem('al_musafa_products', JSON.stringify(products));
-  }
-}
-
-// Default Store Settings
-const defaultSettings = {
-  storeName: 'AL MUSAFFA',
-  email: 'support@almusafa.pk',
-  whatsapp: '+92 300 1234567',
-  address: 'Office # 4, G-11 Markaz, Islamabad, Pakistan',
-  shippingLimit: 3000,
-  shippingCharge: 250
-};
-
-const settings = JSON.parse(localStorage.getItem('al_musafa_settings')) || defaultSettings;
-if (!localStorage.getItem('al_musafa_settings')) {
-  localStorage.setItem('al_musafa_settings', JSON.stringify(settings));
-} else if (settings.storeName === 'AL musafa' || settings.storeName === 'Al Musafa' || settings.storeName === 'AL mUSAFFA') {
-  settings.storeName = 'AL MUSAFFA';
-  localStorage.setItem('al_musafa_settings', JSON.stringify(settings));
-}
-
 // Default Banners Database
 const defaultBanners = {
   hero: [
@@ -200,12 +165,6 @@ const defaultBanners = {
     { image: 'images/DESEI GhEee.png ', subtitle: 'Premium Collection of', title: 'Desi Ghee', category: 'delight' }
   ]
 };
-
-// Load banners from LocalStorage or fallback to default
-let banners = JSON.parse(localStorage.getItem('al_musafa_banners')) || defaultBanners;
-if (!localStorage.getItem('al_musafa_banners')) {
-  localStorage.setItem('al_musafa_banners', JSON.stringify(banners));
-}
 
 // Default Testimonials Database
 const defaultTestimonials = [
@@ -228,12 +187,6 @@ const defaultTestimonials = [
     location: "Islamabad"
   }
 ];
-
-// Load testimonials from LocalStorage or fallback to default
-let testimonials = JSON.parse(localStorage.getItem('al_musafa_testimonials')) || defaultTestimonials;
-if (!localStorage.getItem('al_musafa_testimonials')) {
-  localStorage.setItem('al_musafa_testimonials', JSON.stringify(testimonials));
-}
 
 // Default Blogs Database
 const defaultBlogs = [
@@ -263,12 +216,21 @@ const defaultBlogs = [
   }
 ];
 
-// Load blogs from LocalStorage or fallback to default
-let blogs = JSON.parse(localStorage.getItem('al_musafa_blogs')) || defaultBlogs;
-if (!localStorage.getItem('al_musafa_blogs') || !blogs.every(b => b.content)) {
-  blogs = defaultBlogs;
-  localStorage.setItem('al_musafa_blogs', JSON.stringify(blogs));
-}
+// Local memory state initialized to defaults
+let categories = [...defaultCategories];
+let products = [...defaultProducts];
+const defaultSettings = {
+  storeName: 'AL MUSAFFA',
+  email: 'support@almusafa.pk',
+  whatsapp: '+92 300 1234567',
+  address: 'Office # 4, G-11 Markaz, Islamabad, Pakistan',
+  shippingLimit: 3000,
+  shippingCharge: 250
+};
+let settings = {...defaultSettings};
+let banners = {...defaultBanners};
+let testimonials = [...defaultTestimonials];
+let blogs = [...defaultBlogs];
 
 // App State
 let cart = [];
@@ -281,12 +243,95 @@ document.addEventListener('DOMContentLoaded', () => {
   initApp();
 });
 
-function initApp() {
-  // Apply settings dynamically
-  applyStoreSettings();
-
+async function initApp() {
   // Load Cart from LocalStorage
   loadCart();
+
+  if (supabaseClient) {
+    try {
+      // 1. Load Settings
+      const { data: dbSettings, error: errSettings } = await supabaseClient.from('settings').select('*').single();
+      if (!errSettings && dbSettings) {
+        settings = {
+          storeName: dbSettings.store_name,
+          email: dbSettings.email,
+          whatsapp: dbSettings.whatsapp,
+          address: dbSettings.address,
+          shippingLimit: dbSettings.shipping_limit,
+          shippingCharge: dbSettings.shipping_charge
+        };
+      }
+
+      // 2. Load Categories
+      const { data: dbCategories, error: errCategories } = await supabaseClient.from('categories').select('*').order('id', { ascending: true });
+      if (!errCategories && dbCategories && dbCategories.length > 0) {
+        categories = dbCategories.map(c => ({
+          name: c.name,
+          filter: c.filter,
+          img: c.img
+        }));
+      }
+
+      // 3. Load Products
+      const { data: dbProducts, error: errProducts } = await supabaseClient.from('products').select('*');
+      if (!errProducts && dbProducts && dbProducts.length > 0) {
+        products = dbProducts.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          description: p.description,
+          rating: parseFloat(p.rating),
+          reviews: p.reviews,
+          image: p.image,
+          variants: typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants,
+          benefits: p.benefits,
+          inStock: p.in_stock,
+          featured: p.featured
+        }));
+      }
+
+      // 4. Load Banners
+      const { data: dbBanners, error: errBanners } = await supabaseClient.from('banners').select('*').single();
+      if (!errBanners && dbBanners) {
+        banners = {
+          hero: typeof dbBanners.hero === 'string' ? JSON.parse(dbBanners.hero) : dbBanners.hero,
+          promo: typeof dbBanners.promo === 'string' ? JSON.parse(dbBanners.promo) : dbBanners.promo
+        };
+      }
+
+      // 5. Load Testimonials
+      const { data: dbTestimonials, error: errTestimonials } = await supabaseClient.from('testimonials').select('*').order('id', { ascending: true });
+      if (!errTestimonials && dbTestimonials && dbTestimonials.length > 0) {
+        testimonials = dbTestimonials.map(t => ({
+          rating: t.rating,
+          text: t.text,
+          customer: t.customer,
+          location: t.location
+        }));
+      }
+
+      // 6. Load Blogs
+      const { data: dbBlogs, error: errBlogs } = await supabaseClient.from('blogs').select('*').order('id', { ascending: true });
+      if (!errBlogs && dbBlogs && dbBlogs.length > 0) {
+        blogs = dbBlogs.map(b => ({
+          title: b.title,
+          excerpt: b.excerpt,
+          content: b.content,
+          image: b.image,
+          date: b.date,
+          readTime: b.read_time
+        }));
+      }
+    } catch (e) {
+      console.warn('Error loading from Supabase, falling back to local storage defaults:', e);
+      loadLocalFallback();
+    }
+  } else {
+    loadLocalFallback();
+  }
+
+  // Apply settings dynamically
+  applyStoreSettings();
 
   // Render dynamic Category menus and lists
   renderCategoryNavigation();
@@ -1377,6 +1422,27 @@ function handleCheckoutSubmit(e) {
   ordersList.push(orderObj);
   localStorage.setItem('al_musafa_orders', JSON.stringify(ordersList));
 
+  if (supabaseClient) {
+    supabaseClient.from('orders').insert({
+      order_id: orderId,
+      customer: { name, phone, address, city },
+      items: cart.map(item => ({
+        name: item.name,
+        size: item.size,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      subtotal,
+      shipping: shippingCost,
+      total,
+      payment_method: paymentMethod,
+      status: 'pending',
+      date: new Date().toISOString()
+    }).then(({ error }) => {
+      if (error) console.error('Error inserting order to Supabase:', error);
+    });
+  }
+
   // Populate order success page details
   document.getElementById('success-order-id').innerText = orderId;
 
@@ -1423,4 +1489,28 @@ function handleCheckoutSubmit(e) {
 
   // Switch to success view
   switchView('success');
+}
+
+function loadLocalFallback() {
+  try {
+    const localSettings = localStorage.getItem('al_musafa_settings');
+    if (localSettings) settings = JSON.parse(localSettings);
+
+    const localCategories = localStorage.getItem('al_musafa_categories');
+    if (localCategories) categories = JSON.parse(localCategories);
+
+    const localProducts = localStorage.getItem('al_musafa_products');
+    if (localProducts) products = JSON.parse(localProducts);
+
+    const localBanners = localStorage.getItem('al_musafa_banners');
+    if (localBanners) banners = JSON.parse(localBanners);
+
+    const localTestimonials = localStorage.getItem('al_musafa_testimonials');
+    if (localTestimonials) testimonials = JSON.parse(localTestimonials);
+
+    const localBlogs = localStorage.getItem('al_musafa_blogs');
+    if (localBlogs) blogs = JSON.parse(localBlogs);
+  } catch (e) {
+    console.error('Error reading localStorage fallback:', e);
+  }
 }

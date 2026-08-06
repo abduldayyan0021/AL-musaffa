@@ -1,0 +1,11 @@
+{
+  "hero": [
+    { "image": "images/PURE TRADITION,DELIVERED...png", "alt": "Desi Ghee - Richness You Can Taste", "link": "#catalog-section" },
+    { "image": "images/slider2.png", "alt": "Gift Box - Pure, Desi, and Delightful", "link": "#catalog-section" },
+    { "image": "images/slider3.png", "alt": "Royal Nuts - Every jar, a promise of Purity", "link": "#catalog-section" }
+  ],
+  "promo": [
+    { "image": "images/112.png", "subtitle": "100% Pure", "title": "Raw Honey", "category": "honey" },
+    { "image": "images/DESEI GhEee.png ", "subtitle": "Premium Collection of", "title": "Desi Ghee", "category": "delight" }
+  ]
+}
