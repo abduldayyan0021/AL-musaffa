@@ -1,0 +1,7 @@
+*.code-search
+node_modules/
+.DS_Store
+*.log
+.gemini/
+.agents/
+.git/

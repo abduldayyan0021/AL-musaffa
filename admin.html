@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AL MUSAFFA | Admin Control Panel</title>
+  <link rel="shortcut icon" href="images/logo (2).png" type="image/png">
+  <link rel="stylesheet" href="style.css?v=4.5">
+</head>
+
+<body class="admin-body">
+
+  <!-- Admin Layout Wrapper -->
+  <div class="admin-wrapper">
+
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <img src="images/logo (2).png" alt="Logo">
+          <div>
+            <span class="sidebar-title" id="admin-store-name">AL MUSAFFA</span>
+            <span class="sidebar-subtitle">Admin Panel</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="#" class="sidebar-link active" data-tab="dashboard">
+              <span> Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="orders">
+              <span>Orders Manager</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="products">
+              <span>Products Catalog</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="categories">
+              <span>Categories Manager</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="banners">
+              <span>Banners Manager</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="testimonials">
+              <span>Testimonials Manager</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="blogs">
+              <span>Blogs Manager</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" data-tab="settings">
+              <span>Store Settings</span>
+            </a>
+          </li>
+          <li style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+            <a href="index.html" class="sidebar-link">
+              <span> View Storefront</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+
+      <!-- Top navbar -->
+      <header class="admin-topbar">
+        <h2 id="current-tab-title">Dashboard Overview</h2>
+        <div class="admin-profile">
+          <span class="profile-avatar">A</span>
+          <span>Store Manager</span>
+        </div>
+      </header>
+
+      <!-- ADMIN TABS -->
+
+      <!-- TAB 1: DASHBOARD -->
+      <section id="tab-dashboard" class="admin-tab active">
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-icon"
+              style="background-color: rgba(196, 139, 37, 0.1); color: var(--color-primary);">₨</span>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Revenue</span>
+              <h3 class="kpi-value" id="stat-revenue">Rs. 0</h3>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1); color: #ffc107;">📦</span>
+            <div class="kpi-info">
+              <span class="kpi-label">Active Orders</span>
+              <h3 class="kpi-value" id="stat-orders">0</h3>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-icon"
+              style="background-color: rgba(40, 167, 69, 0.1); color: var(--color-success);">🍏</span>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Products</span>
+              <h3 class="kpi-value" id="stat-products">0</h3>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-icon" style="background-color: rgba(0, 123, 255, 0.1); color: #007bff;">📈</span>
+            <div class="kpi-info">
+              <span class="kpi-label">Average Order Value</span>
+              <h3 class="kpi-value" id="stat-aov">Rs. 0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity layout -->
+        <div class="admin-card" style="margin-top: 30px;">
+          <div class="admin-card-header">
+            <h3>Recent Orders</h3>
+            <button class="btn btn-secondary" onclick="switchAdminTab('orders')"
+              style="padding: 6px 16px; font-size: 13px;">View All Orders</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Name</th>
+                  <th>City</th>
+                  <th>Order Value</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: ORDERS MANAGER -->
+      <section id="tab-orders" class="admin-tab">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Manage Orders</h3>
+            <!-- Order status filter tabs -->
+            <div class="order-status-tabs">
+              <button class="order-filter-btn active" data-status="all">All</button>
+              <button class="order-filter-btn" data-status="pending">Pending</button>
+              <button class="order-filter-btn" data-status="confirmed">Confirmed</button>
+              <button class="order-filter-btn" data-status="shipped">Shipped</button>
+              <button class="order-filter-btn" data-status="cancelled">Cancelled</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Info</th>
+                  <th>Items Ordered</th>
+                  <th>Grand Total</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="all-orders-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: PRODUCTS CATALOG -->
+      <section id="tab-products" class="admin-tab">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Store Inventory</h3>
+            <button class="btn" onclick="openProductModal()"><span style="margin-right: 5px;">+</span> Add New
+              Product</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Thumbnail</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Weight/Size Sizes</th>
+                  <th>Price Range</th>
+                  <th>Stock Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: STORE SETTINGS -->
+      <section id="tab-settings" class="admin-tab">
+        <div class="admin-card" style="max-width: 700px;">
+          <div class="admin-card-header">
+            <h3>General Configurations</h3>
+          </div>
+          <form id="settings-form" class="admin-settings-form">
+            <div class="form-group">
+              <label for="settings-store-name">Store Name</label>
+              <input type="text" id="settings-store-name" class="form-control" placeholder="e.g. AL MUSAFFA" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="settings-whatsapp">WhatsApp Contact Number</label>
+                <input type="text" id="settings-whatsapp" class="form-control" placeholder="e.g. +923001234567"
+                  required>
+              </div>
+              <div class="form-group">
+                <label for="settings-email">Support Email Address</label>
+                <input type="email" id="settings-email" class="form-control" placeholder="e.g. support@almusafa.pk"
+                  required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="settings-shipping-limit">Free Shipping Threshold (PKR)</label>
+                <input type="number" id="settings-shipping-limit" class="form-control" placeholder="e.g. 3000" min="0"
+                  required>
+              </div>
+              <div class="form-group">
+                <label for="settings-shipping-charge">Standard Shipping Charge (PKR)</label>
+                <input type="number" id="settings-shipping-charge" class="form-control" placeholder="e.g. 250" min="0"
+                  required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settings-address">Warehouse Physical Address</label>
+              <textarea id="settings-address" class="form-control" rows="3"
+                placeholder="e.g. Plot 4, G-11 Markaz, Islamabad" required></textarea>
+            </div>
+
+            <button type="submit" class="btn" style="padding: 12px 30px;">Save Settings</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB 5: CATEGORIES MANAGER -->
+      <section id="tab-categories" class="admin-tab">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Manage Categories</h3>
+            <button class="btn" onclick="openCategoryModal()"><span style="margin-right: 5px;">+</span> Add New
+              Category</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Thumbnail</th>
+                  <th>Category Name</th>
+                  <th>Filter Slug</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="categories-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+      </section>
+
+      <!-- TAB 6: BANNERS MANAGER -->
+      <section id="tab-banners" class="admin-tab">
+        <div class="admin-card" style="margin-bottom: 30px;">
+          <div class="admin-card-header">
+            <h3>Hero Slider Banners</h3>
+            <button class="btn" onclick="openBannerModal('hero')"><span style="margin-right: 5px;">+</span> Add Hero Slide</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Thumbnail</th>
+                  <th>Alt Text / Title</th>
+                  <th>Target Link</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="hero-banners-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Promo Banners</h3>
+            <button class="btn" onclick="openBannerModal('promo')"><span style="margin-right: 5px;">+</span> Add Promo Banner</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Thumbnail</th>
+                  <th>Title</th>
+                  <th>Subtitle</th>
+                  <th>Category Filter</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="promo-banners-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: TESTIMONIALS MANAGER -->
+      <section id="tab-testimonials" class="admin-tab">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Customer Testimonials</h3>
+            <button class="btn" onclick="openTestimonialModal()"><span style="margin-right: 5px;">+</span> Add Testimonial</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width: 120px;">Rating</th>
+                  <th style="width: 150px;">Customer Name</th>
+                  <th style="width: 120px;">Location</th>
+                  <th>Review Text</th>
+                  <th style="width: 120px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="testimonials-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 8: BLOGS MANAGER -->
+      <section id="tab-blogs" class="admin-tab">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Blog Articles</h3>
+            <button class="btn" onclick="openBlogModalAdmin()"><span style="margin-right: 5px;">+</span> Add Blog Post</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width: 80px;">Cover</th>
+                  <th style="width: 200px;">Title</th>
+                  <th style="width: 100px;">Read Time</th>
+                  <th style="width: 120px;">Published Date</th>
+                  <th>Excerpt</th>
+                  <th style="width: 120px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="blogs-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div class="modal-overlay" id="product-form-modal">
+    <div class="modal-content" style="max-width: 650px;">
+      <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      <div style="padding: 30px;">
+        <h3 id="modal-form-title"
+          style="font-size: 22px; color: var(--color-primary); margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">
+          Add New Product</h3>
+
+        <form id="product-admin-form">
+          <input type="hidden" id="admin-product-index"> <!-- Store index during edit -->
+
+          <div class="form-group">
+            <label for="admin-product-name">Product Name *</label>
+            <input type="text" id="admin-product-name" class="form-control" placeholder="e.g. Organic Clover Honey"
+              required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="admin-product-category">Category *</label>
+              <select id="admin-product-category" class="form-control" required>
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="admin-product-stock">Stock Availability *</label>
+              <select id="admin-product-stock" class="form-control" required>
+                <option value="true">In Stock</option>
+                <option value="false">Out of Stock</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="admin-product-image">Product Image URL / Preset *</label>
+              <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="text" id="admin-product-image" class="form-control"
+                  placeholder="e.g. images/sidr_honey.png" required>
+                <select id="admin-product-image-presets" class="form-control" style="width: 150px; flex-shrink: 0;"
+                  onchange="if(this.value) { document.getElementById('admin-product-image').value = this.value; updateProductImagePreview(this.value); }">
+                  <option value="">Preset</option>
+                  <option value="images/sidr_honey.png">Honey</option>
+                  <option value="images/desi_ghee.png">Desi Ghee</option>
+                  <option value="images/logo.png">Logo</option>
+                </select>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="file" id="admin-product-image-file" class="form-control" accept="image/*"
+                  style="padding: 6px 12px; font-size: 14px;">
+                <div id="admin-product-image-preview-container"
+                  style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: var(--color-bg-light); flex-shrink: 0;">
+                  <img id="admin-product-image-preview" src="images/logo.png"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+              </div>
+              <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 4px;">Tip: For
+                best performance, upload smaller, web-optimized images.</span>
+            </div>
+            <div class="form-group">
+              <label for="admin-product-rating">Mock Rating (1-5)</label>
+              <input type="number" id="admin-product-rating" class="form-control" value="4.8" min="1" max="5" step="0.1"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Size Variants & Prices *</label>
+            <div id="variants-form-list" style="margin-bottom: 10px;">
+              <!-- Input fields for sizes and prices generated dynamically -->
+            </div>
+            <button type="button" class="btn btn-secondary"
+              style="padding: 6px 12px; font-size: 12px; border-radius: 4px;" onclick="addVariantFormRow()">+ Add Size
+              Option</button>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-product-description">Description</label>
+            <textarea id="admin-product-description" class="form-control" rows="3"
+              placeholder="Describe the product and ingredients..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-product-benefits">Core Benefits (One per line)</label>
+            <textarea id="admin-product-benefits" class="form-control" rows="3"
+              placeholder="Benefit 1&#10;Benefit 2&#10;Benefit 3"></textarea>
+          </div>
+
+          <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button type="submit" class="btn" style="flex-grow:1;">Save Product</button>
+            <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT CATEGORY MODAL -->
+  <div class="modal-overlay" id="category-form-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+      <div style="padding: 30px;">
+        <h3 id="category-modal-form-title"
+          style="font-size: 22px; color: var(--color-primary); margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">
+          Add New Category</h3>
+
+        <form id="category-admin-form">
+          <input type="hidden" id="admin-category-index"> <!-- Store index during edit -->
+
+          <div class="form-group">
+            <label for="admin-category-name">Category Name *</label>
+            <input type="text" id="admin-category-name" class="form-control" placeholder="e.g. Pure Delights" required
+              oninput="autoGenerateCategorySlug(this.value)">
+          </div>
+
+          <div class="form-group">
+            <label for="admin-category-slug">Filter Slug (Lowercase, no spaces) *</label>
+            <input type="text" id="admin-category-slug" class="form-control" placeholder="e.g. delight" required
+              pattern="[a-z0-9\-]+">
+          </div>
+
+          <div class="form-group">
+            <label for="admin-category-image">Category Image URL / Preset *</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <input type="text" id="admin-category-image" class="form-control" placeholder="e.g. images/desi_ghee.png"
+                required>
+              <select id="admin-category-image-presets" class="form-control" style="width: 130px; flex-shrink: 0;"
+                onchange="if(this.value) { document.getElementById('admin-category-image').value = this.value; updateCategoryUiPreview(this.value); }">
+                <option value="">Preset</option>
+                <option value="images/sidr_honey.png">Honey</option>
+                <option value="images/desi_ghee.png">Desi Ghee</option>
+                <option value="images/logo.png">Logo</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="file" id="admin-category-image-file" class="form-control" accept="image/*"
+                style="padding: 6px 12px; font-size: 14px;">
+              <div id="admin-category-image-preview-container"
+                style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: var(--color-bg-light); flex-shrink: 0;">
+                <img id="admin-category-image-preview" src="images/logo.png"
+                  style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+            </div>
+            <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 4px;">Tip:
+              For best performance, upload smaller, web-optimized images.</span>
+          </div>
+
+          <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <button type="submit" class="btn" style="flex-grow:1;">Save Category</button>
+            <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT BANNER MODAL -->
+  <div class="modal-overlay" id="banner-form-modal">
+    <div class="modal-content" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeBannerModal()">&times;</button>
+      <div style="padding: 30px;">
+        <h3 id="banner-modal-form-title"
+          style="font-size: 22px; color: var(--color-primary); margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">
+          Add New Banner</h3>
+
+        <form id="banner-admin-form">
+          <input type="hidden" id="admin-banner-type"> <!-- 'hero' or 'promo' -->
+          <input type="hidden" id="admin-banner-index"> <!-- Store index during edit, -1 for new -->
+
+          <div class="form-group">
+            <label for="admin-banner-title" id="banner-title-label">Title / Alt Text *</label>
+            <input type="text" id="admin-banner-title" class="form-control" placeholder="e.g. Desi Ghee - Richness You Can Taste" required>
+          </div>
+
+          <div class="form-group" id="banner-subtitle-group">
+            <label for="admin-banner-subtitle">Subtitle *</label>
+            <input type="text" id="admin-banner-subtitle" class="form-control" placeholder="e.g. Premium Collection of">
+          </div>
+
+          <div class="form-group" id="banner-link-group">
+            <label for="admin-banner-link">Target Link URL *</label>
+            <input type="text" id="admin-banner-link" class="form-control" placeholder="e.g. #catalog-section" value="#catalog-section">
+          </div>
+
+          <div class="form-group" id="banner-category-group">
+            <label for="admin-banner-category">Target Category Filter *</label>
+            <select id="admin-banner-category" class="form-control">
+              <!-- Loaded dynamically in admin.js -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-banner-image">Banner Image URL / Preset *</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <input type="text" id="admin-banner-image" class="form-control" placeholder="e.g. images/slider2.png" required>
+              <select id="admin-banner-image-presets" class="form-control" style="width: 130px; flex-shrink: 0;"
+                onchange="if(this.value) { document.getElementById('admin-banner-image').value = this.value; updateBannerUiPreview(this.value); }">
+                <option value="">Preset</option>
+                <option value="images/PURE TRADITION,DELIVERED...png">Hero 1</option>
+                <option value="images/slider2.png">Hero 2</option>
+                <option value="images/slider3.png">Hero 3</option>
+                <option value="images/112.png">Promo Honey</option>
+                <option value="images/DESEI GhEee.png ">Promo Ghee</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="file" id="admin-banner-image-file" class="form-control" accept="image/*"
+                style="padding: 6px 12px; font-size: 14px;">
+              <div id="admin-banner-image-preview-container"
+                style="width: 80px; height: 50px; border-radius: 6px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: var(--color-bg-light); flex-shrink: 0;">
+                <img id="admin-banner-image-preview" src="images/logo.png"
+                  style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+            </div>
+            <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 4px;">Tip:
+              For best performance, upload smaller, web-optimized images.</span>
+          </div>
+
+          <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <button type="submit" class="btn" style="flex-grow:1;">Save Banner</button>
+            <button type="button" class="btn btn-secondary" onclick="closeBannerModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT TESTIMONIAL MODAL -->
+  <div class="modal-overlay" id="testimonial-form-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeTestimonialModal()">&times;</button>
+      <div style="padding: 30px;">
+        <h3 id="testimonial-modal-form-title"
+          style="font-size: 22px; color: var(--color-primary); margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">
+          Add Testimonial</h3>
+
+        <form id="testimonial-admin-form">
+          <input type="hidden" id="admin-testimonial-index"> <!-- Store index during edit -->
+
+          <div class="form-group">
+            <label for="admin-testimonial-name">Customer Name *</label>
+            <input type="text" id="admin-testimonial-name" class="form-control" placeholder="e.g. Zahid Ahmed" required>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-testimonial-location">Location / City *</label>
+            <input type="text" id="admin-testimonial-location" class="form-control" placeholder="e.g. Lahore" required>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-testimonial-rating">Rating (Stars) *</label>
+            <select id="admin-testimonial-rating" class="form-control" required>
+              <option value="5">★★★★★ (5 Stars)</option>
+              <option value="4">★★★★☆ (4 Stars)</option>
+              <option value="3">★★★☆☆ (3 Stars)</option>
+              <option value="2">★★☆☆☆ (2 Stars)</option>
+              <option value="1">★☆☆☆☆ (1 Star)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-testimonial-text">Review Message *</label>
+            <textarea id="admin-testimonial-text" class="form-control" rows="4" placeholder="Enter what the customer said..." required></textarea>
+          </div>
+
+          <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <button type="submit" class="btn" style="flex-grow:1;">Save Testimonial</button>
+            <button type="button" class="btn btn-secondary" onclick="closeTestimonialModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT BLOG MODAL -->
+  <div class="modal-overlay" id="blog-form-modal">
+    <div class="modal-content" style="max-width: 650px;">
+      <button class="modal-close" onclick="closeBlogModalAdmin()">&times;</button>
+      <div style="padding: 30px;">
+        <h3 id="blog-modal-form-title"
+          style="font-size: 22px; color: var(--color-primary); margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">
+          Add Blog Post</h3>
+
+        <form id="blog-admin-form">
+          <input type="hidden" id="admin-blog-index"> <!-- Store index during edit -->
+
+          <div class="form-group">
+            <label for="admin-blog-title">Blog Title *</label>
+            <input type="text" id="admin-blog-title" class="form-control" placeholder="e.g. Why Raw Honey is Better Than Processed" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="admin-blog-readtime">Read Time (e.g. 5 min read) *</label>
+              <input type="text" id="admin-blog-readtime" class="form-control" placeholder="e.g. 5 min read" required>
+            </div>
+            <div class="form-group">
+              <label for="admin-blog-date">Publish Date (e.g. June 18, 2026) *</label>
+              <input type="text" id="admin-blog-date" class="form-control" placeholder="e.g. June 18, 2026" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-blog-image">Blog Cover Image URL / Preset *</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <input type="text" id="admin-blog-image" class="form-control" placeholder="e.g. images/P1.png" required>
+              <select id="admin-blog-image-presets" class="form-control" style="width: 130px; flex-shrink: 0;"
+                onchange="if(this.value) { document.getElementById('admin-blog-image').value = this.value; updateBlogImagePreview(this.value); }">
+                <option value="">Preset</option>
+                <option value="images/P1.png">Blog 1</option>
+                <option value="images/sidr3.png">Blog 2</option>
+                <option value="images/Desi2.png">Blog 3</option>
+                <option value="images/logo.png">Logo</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="file" id="admin-blog-image-file" class="form-control" accept="image/*"
+                style="padding: 6px 12px; font-size: 14px;">
+              <div id="admin-blog-image-preview-container"
+                style="width: 80px; height: 50px; border-radius: 6px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: var(--color-bg-light); flex-shrink: 0;">
+                <img id="admin-blog-image-preview" src="images/logo.png"
+                  style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+            </div>
+            <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 4px;">Tip:
+              For best performance, upload smaller, web-optimized images.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-blog-excerpt">Brief Excerpt *</label>
+            <textarea id="admin-blog-excerpt" class="form-control" rows="2" placeholder="Brief summary to show in catalog grids..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-blog-content">Full Blog Article Content *</label>
+            <textarea id="admin-blog-content" class="form-control" rows="6" placeholder="Write the full article content here. Use double blank lines to separate paragraphs." required></textarea>
+          </div>
+
+          <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <button type="submit" class="btn" style="flex-grow:1;">Save Blog Post</button>
+            <button type="button" class="btn btn-secondary" onclick="closeBlogModalAdmin()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js?v=1.9"></script>
+</body>
+
+</html>

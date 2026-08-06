@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Discover AL MUSAFFA's premium collection of 100% natural, unadulterated raw honey, cold-pressed oils, pure desi ghee, panjeeri, and wellness supplements. Sourced with purity in Pakistan.">
+  <title>AL MUSAFFA | 100% Pure Raw Honey, Cold-Pressed Oils & Organic Food</title>
+  <link rel="shortcut icon" href="images/logo.png?v=2.0" type="image/png">
+  <link rel="stylesheet" href="style.css?v=4.5">
+</head>
+
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    FREE delivery across Pakistan on all orders above Rs. 3,000!
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <!-- Hamburger Menu for Mobile -->
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
+
+      <!-- Logo -->
+      <div class="logo-container">
+        <a href="#" id="logo-link">
+          <img src="images/logo.png?v=2.0" alt="AL MUSAFFA Logo" class="logo-img" onerror="this.style.display='none'">
+          <span class="logo-text">AL MUSAFFA</span>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="main-nav" id="main-nav">
+        <ul>
+          <li><a href="#" class="nav-link active" data-view="home">Home</a></li>
+          <li><a href="#" class="nav-link" data-view="home" data-category="honey">Raw Honey</a></li>
+          <li><a href="#" class="nav-link" data-view="home" data-category="sidr">Sidr Honey</a></li>
+          <li><a href="#" class="nav-link" data-view="home" data-category="delight">Pure Delights</a></li>
+          <li><a href="#" class="nav-link" data-view="home" data-category="gift">Gift Boxes</a></li>
+        </ul>
+      </nav>
+
+      <!-- Actions -->
+      <div class="header-actions">
+        <!-- Admin Link Icon -->
+        <button class="cart-icon-btn" id="admin-login-btn" aria-label="Admin Portal" style="margin-right: 15px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+
+        <!-- Cart Trigger -->
+        <button class="cart-icon-btn" id="cart-btn" aria-label="Open cart">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" id="cart-count-badge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Background dim backdrop for mobile menu & cart drawer -->
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+  <!-- MAIN VIEWS (SPA Layout) -->
+
+  <!-- 1. HOME & STORE CATALOG VIEW -->
+  <div id="home-view" class="view-section active-view">
+
+    <!-- Hero Slider / Banner Section -->
+    <section class="hero-section">
+      <div class="hero-slider-container">
+        <div class="hero-slides" id="hero-slides">
+          <!-- Loaded dynamically -->
+        </div>
+
+        <!-- Slider Dots -->
+        <div class="slider-dots" id="hero-dots">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Trust Section -->
+    <section class="features-trust-section">
+      <div class="container features-trust-container">
+        <div class="feature-trust-item">
+          <div class="feature-trust-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              <line x1="3" y1="8" x2="9" y2="8"></line>
+            </svg>
+          </div>
+          <h4 class="feature-trust-title">Free Shipping</h4>
+          <p class="feature-trust-desc">Spend Rs. 3,000/- or more and get free delivery
+            anywhere in Pakistan.</p>
+        </div>
+        <div class="feature-trust-item">
+          <div class="feature-trust-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="13" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+              <path d="M7 14h.01"></path>
+              <path d="M11 14h.01"></path>
+              <path d="M16 14a2 2 0 0 0 2-2V9"></path>
+              <path d="M12 17a3 3 0 0 0 3-3V11"></path>
+            </svg>
+          </div>
+          <h4 class="feature-trust-title">Secure Payment</h4>
+          <p class="feature-trust-desc">Pay securely at your doorstep or via bank transfer, available across Pakistan.
+          </p>
+        </div>
+        <div class="feature-trust-item">
+          <div class="feature-trust-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              <path d="M9 13l2 2 4-4"></path>
+            </svg>
+          </div>
+          <h4 class="feature-trust-title">Easy Return Policy</h4>
+          <p class="feature-trust-desc">Unhappy with the quality? Enjoy no questions asked
+            100% Money back guarantee.</p>
+        </div>
+        <div class="feature-trust-item">
+          <div class="feature-trust-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <!-- Honey dipper handle -->
+              <path d="M19 5l-7 7"></path>
+              <!-- Dipper head rings -->
+              <rect x="6" y="11" width="7" height="7" rx="1.5" transform="rotate(-45 9.5 14.5)"></rect>
+              <line x1="8" y1="12" x2="13" y2="17"></line>
+              <line x1="9.5" y1="10.5" x2="14.5" y2="15.5"></line>
+              <line x1="11" y1="9" x2="16" y2="14"></line>
+              <!-- Honey drip -->
+              <path d="M6 18a1.5 1.5 0 0 0-1.5 1.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5S6.8 18 6 18z"></path>
+            </svg>
+          </div>
+          <h4 class="feature-trust-title">Made with Love</h4>
+          <p class="feature-trust-desc">Unheated, unfiltered, and unprocessed and Free from Artificial Preservatives.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promo Banners Section -->
+    <section class="promo-banners-section">
+      <div class="container promo-banners-container">
+        <!-- Loaded dynamically -->
+      </div>
+    </section>
+
+    <!-- Categories Quick Grid -->
+    <section class="categories-section section-padding">
+      <div class="container text-center">
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-subtitle">Choose from our selected range of fresh, healthy dietary products</p>
+        <div class="categories-grid" id="categories-grid">
+          <!-- Dynamic rendering -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Products Catalog Section -->
+    <section class="catalog-section section-padding" id="catalog-section">
+      <div class="container">
+        <div class="text-center">
+          <h2 class="section-title">Our Premium Products</h2>
+          <p class="section-subtitle">A collection of laboratory tested and raw organic foods</p>
+        </div>
+
+        <div class="catalog-header">
+          <!-- Filter Tabs -->
+          <div class="filter-tabs" id="catalog-filter-tabs">
+            <button class="filter-tab active" data-category="all" onclick="handleFilterTabClick('all')">All
+              Products</button>
+            <!-- Loaded dynamically -->
+          </div>
+
+          <!-- Sorting -->
+          <div class="sort-container">
+            <label for="sort-select" style="margin-right: 8px; font-weight: 500; font-size: 14px;">Sort By:</label>
+            <select id="sort-select" onchange="handleSortChange(event)">
+              <option value="default">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid" id="product-grid">
+          <!-- Dynamic rendering -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Who We Are Section -->
+    <section class="about-section section-padding">
+      <div class="container about-container">
+        <div class="about-content">
+          <h2 class="section-title">Who We Are?</h2>
+          <p class="about-lead">Purity Sourced with Love, Hand-Delivered to Your Doorstep.</p>
+          <p class="about-text">
+            At <strong>AL MUSAFFA</strong>, we are dedicated to reviving traditional organic honey and Desi Ghee across
+            Pakistan.
+            We specialize in providing 100% pure, unadulterated, and laboratorytested raw , premium honey, and
+            traditional desi ghee.
+          </p>
+          <p class="about-text">
+            Every product in our catalog undergoes rigorous quality control standards, ensuring zero additives, zero
+            sugar syrups, and zero chemicals. We believe that clean, raw foods are the foundation of vibrant health and
+            longevity, and we promise nothing less than the absolute natural goodness of nature.
+          </p>
+        </div>
+        <div class="about-image-wrapper">
+          <img src="images/Gemini_Generated_Image_wjv407wjv407wjv4-removebg-preview.png" alt="AL MUSAFFA Logo"
+            class="about-logo-img">
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Testimonials / Customer Reviews -->
+    <section class="testimonials-section section-padding">
+      <div class="container">
+        <div class="text-center">
+          <h2 class="section-title">What Our Customers Say</h2>
+          <p class="section-subtitle">Real feedback from families who trust AL MUSAFFA for their daily nutrition</p>
+        </div>
+
+        <div class="testimonials-grid" id="testimonials-container">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational/Blog Section -->
+    <section class="blog-section section-padding" style="background-color: var(--color-bg-white);">
+      <div class="container">
+        <div class="text-center">
+          <h2 class="section-title">Organic Wellness Blog</h2>
+          <p class="section-subtitle">Learn about natural remedies, dietary benefits, and healthy lifestyles</p>
+        </div>
+
+        <div class="blog-grid" id="blogs-container">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 2. CHECKOUT VIEW -->
+  <div id="checkout-view" class="view-section">
+    <div class="container">
+      <div class="checkout-layout">
+        <!-- Shipping details form -->
+        <div class="checkout-card">
+          <h3>Shipping & Billing Details</h3>
+          <form id="checkout-form">
+            <div class="form-group">
+              <label for="customer-name">Full Name *</label>
+              <input type="text" id="customer-name" class="form-control" placeholder="e.g. Muhammad Ali" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-phone">WhatsApp/Phone Number *</label>
+                <input type="tel" id="customer-phone" class="form-control" placeholder="e.g. 03001234567" required>
+              </div>
+              <div class="form-group">
+                <label for="customer-city">City *</label>
+                <select id="customer-city" class="form-control" required>
+                  <option value="" disabled selected>Select your city</option>
+                  <option value="Karachi">Karachi</option>
+                  <option value="Lahore">Lahore</option>
+                  <option value="Islamabad">Islamabad</option>
+                  <option value="Rawalpindi">Rawalpindi</option>
+                  <option value="Faisalabad">Faisalabad</option>
+                  <option value="Multan">Multan</option>
+                  <option value="Peshawar">Peshawar</option>
+                  <option value="Quetta">Quetta</option>
+                  <option value="Gujranwala">Gujranwala</option>
+                  <option value="Sialkot">Sialkot</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Bahawalpur">Bahawalpur</option>
+                  <option value="Sargodha">Sargodha</option>
+                  <option value="Sukumar">Sukkur</option>
+                  <option value="Jhelum">Jhelum</option>
+                  <option value="Gujrat">Gujrat</option>
+                  <option value="Sahiwal">Sahiwal</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-address">Complete Delivery Address *</label>
+              <textarea id="customer-address" class="form-control" rows="3"
+                placeholder="e.g. House # 12, Street # 3, Sector G-11/2" required></textarea>
+            </div>
+
+            <h3>Select Payment Method</h3>
+            <div class="payment-selector">
+              <div class="payment-option active" id="opt-cod" onclick="selectPaymentMethod('cod')">
+                <input type="radio" id="payment-cod" name="payment_method" value="cod" checked>
+                <div class="payment-desc">
+                  <h4>Cash on Delivery (COD)</h4>
+                  <p>Pay cash when the courier rider delivers products to your doorstep.</p>
+                </div>
+              </div>
+              <div class="payment-option" id="opt-bank" onclick="selectPaymentMethod('bank')">
+                <input type="radio" id="payment-bank" name="payment_method" value="bank">
+                <div class="payment-desc">
+                  <h4>Direct Bank Transfer</h4>
+                  <p>Transfer the total amount to our bank account. Send receipt to verify.</p>
+                </div>
+              </div>
+              <!-- Bank details box (toggled by radio) -->
+              <div class="bank-details-box" id="bank-details">
+                <strong>Bank Account Details:</strong><br>
+                Bank Name: Meezan Bank Ltd.<br>
+                Account Title: AL MUSAFFA Organic Foods<br>
+                Account Number: 1204-010567890<br>
+                IBAN: PK45MEZN1204010567890<br>
+                <span style="font-size:11px; color:var(--color-primary-hover);">* Please WhatsApp your transfer receipt
+                  to +92 300 1234567 with your Order ID.</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-block btn-secondary"
+              style="background-color: var(--color-primary); color: white; margin-top: 20px; border:none; padding:15px;">Complete
+              Order</button>
+          </form>
+        </div>
+
+        <!-- Order Summary panel -->
+        <div class="checkout-card" style="height: fit-content;">
+          <h3>Your Order Summary</h3>
+          <div class="checkout-summary-list" id="checkout-items-list">
+            <!-- Dynamic list -->
+          </div>
+
+          <div class="checkout-totals">
+            <div class="totals-row">
+              <span>Subtotal</span>
+              <span id="summary-subtotal">Rs. 0</span>
+            </div>
+            <div class="totals-row">
+              <span>Shipping Charges</span>
+              <span id="summary-shipping">Rs. 0</span>
+            </div>
+            <div class="totals-row grand-total">
+              <span>Grand Total</span>
+              <span class="total-val" id="summary-total">Rs. 0</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-block" onclick="switchView('home')">Back to Shopping</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. SUCCESS / INVOICE VIEW -->
+  <div id="success-view" class="view-section">
+    <div class="container">
+      <div class="order-success-card">
+        <span class="success-icon">✓</span>
+        <h2>Thank You For Your Order!</h2>
+        <p class="success-message">Your order has been placed successfully. A representative will contact you via phone
+          or WhatsApp shortly to confirm shipping details before dispatching.</p>
+
+        <span class="order-id-label">Order ID: <span id="success-order-id">AM-12345</span></span>
+
+        <div class="invoice-box">
+          <div class="invoice-header">Order Invoice Summary</div>
+          <div id="invoice-items">
+            <!-- Dynamic items summary -->
+          </div>
+          <div id="invoice-details">
+            <!-- Dynamic details summary -->
+          </div>
+        </div>
+
+        <button class="btn" onclick="switchView('home')">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE-OUT CART DRAWER -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <h3 style="font-size: 20px; font-weight: 600; display:flex; align-items:center; gap:8px;">
+        🛒 Shopping Cart
+      </h3>
+      <button class="cart-close-btn" id="cart-close">&times;</button>
+    </div>
+
+    <!-- Free Shipping Progress Tracker -->
+    <div class="free-shipping-progress">
+      <div class="progress-text" id="progress-text">Add Rs. 3,000 more for FREE SHIPPING!</div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- Cart items list scrollable wrapper -->
+    <div class="cart-items-list" id="cart-items-list">
+      <!-- Dynamic cart items list -->
+    </div>
+
+    <!-- Cart Footer with totals and buttons -->
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span>Subtotal:</span>
+        <span class="cart-subtotal-price" id="cart-subtotal-price">Rs. 0</span>
+      </div>
+      <p class="cart-note">Shipping cost and taxes calculated at checkout</p>
+      <button class="btn btn-block" id="cart-checkout-btn" onclick="goToCheckout()" style="padding: 15px;">Proceed to
+        Checkout</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div class="modal-overlay" id="product-detail-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeProductDetail()">&times;</button>
+      <div id="modal-product-content">
+        <!-- Dynamic modal layout -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/923001234567?text=Assalam-o-Alaikum%20AL%20MUSAFFA,%20I%20am%20interested%20in%20your%20products."
+    class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"
+      style="display:inline-block; vertical-align:middle;">
+      <path
+        d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.982L2 22l5.202-1.362a9.927 9.927 0 0 0 4.808 1.226h.003c5.508 0 9.99-4.478 9.99-9.984 0-2.669-1.037-5.176-2.924-7.062C17.186 2.93 14.68 2 12.012 2zm5.726 13.913c-.246.691-1.224 1.256-1.748 1.31-.476.05-1.096.079-1.77-.137-2.69-.861-4.729-3.411-5.18-4.015-.09-.12-1.37-1.821-1.37-3.474 0-1.654.852-2.464 1.155-2.77.246-.247.656-.37.102.37l.452.923c.31.637.587 1.21.655 1.347.069.137.093.295.02.438-.074.143-.162.23-.277.348-.12.12-.254.27-.361.365-.12.11-.246.23-.105.474.14.242.625 1.026 1.34 1.66.92.817 1.698 1.07 1.942 1.19.243.12.387.102.53-.063.143-.166.62-.722.785-.97.166-.247.33-.205.556-.12.227.085 1.442.678 1.69 1.802.247.123.412.296.486.438.075.143.075.828.053 1.144c-.022.316-.246 1.002-.492 1.693z" />
+    </svg>
+  </a>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>AL MUSAFFA</h3>
+          <p>We are dedicated to reviving traditional organic nutrition by providing 100% pure, unadulterated, and
+            laboratory tested raw honey, cold-pressed oils, and bilona desi ghee all over Pakistan.</p>
+          <div class="payment-methods">
+            <span class="payment-badge">COD</span>
+            <span class="payment-badge">Bank Transfer</span>
+            <span class="payment-badge">EasyPaisa</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links" id="footer-categories-links">
+            <!-- Loaded dynamically -->
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Customer Support</h3>
+          <ul class="footer-links">
+            <li><a href="#" onclick="alert('Shipping & Returns policy coming soon!'); return false;">Shipping &
+                Returns</a></li>
+            <li><a href="#" onclick="alert('Privacy Policy coming soon!'); return false;">Privacy Policy</a></li>
+            <li><a href="#" onclick="alert('Terms of Service coming soon!'); return false;">Terms of Service</a></li>
+            <li><a href="#" onclick="alert('Laboratory Test certificates page coming soon!'); return false;">Lab Reports
+                & Certifications</a></li>
+            <li><a href="#" id="footer-corporate-link" target="_blank" rel="noopener noreferrer"
+                style="font-weight: bold; color: #ffc107;">🏢 Corporate Orders</a></li>
+            <li><a href="admin.html" style="font-weight: bold; color: #ffc107;">⚙️ Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Contact & Follow Us</h3>
+          <ul class="footer-contact">
+            <li>📞 +92 300 1234567</li>
+            <li>✉️ support@almusafa.pk</li>
+            <li>📍 Office # 4, G-11 Markaz, Islamabad, Pakistan</li>
+          </ul>
+          <div style="margin-top: 25px;">
+            <h4
+              style="color: var(--color-bg-white); font-size: 14px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
+              Follow Us</h4>
+            <div class="social-links" style="display: flex; gap: 15px; align-items: center;">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-link"
+                aria-label="Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="social-icon">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link"
+                aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="social-icon">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-link"
+                aria-label="YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="social-icon">
+                  <path
+                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z">
+                  </path>
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                </svg>
+              </a>
+              <a href="#" id="social-whatsapp-link" target="_blank" rel="noopener noreferrer" class="social-link"
+                aria-label="WhatsApp">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="social-icon">
+                  <path
+                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                  </path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="copyright">
+          &copy; 2026 AL MUSAFFA Organic Foods. All rights reserved.
+        </div>
+        <div style="font-size:12px; color:rgba(255, 255, 255, 0.4);">
+          Designed with ❤️ for purity & health.
+        </div>
+      </div>
+    </div>
+    <!-- ADMIN LOGIN MODAL -->
+    <div class="modal-overlay" id="admin-login-modal">
+      <div class="modal-content" style="max-width: 400px; padding: 30px;">
+        <button class="modal-close" id="close-login-modal">&times;</button>
+        <h3 style="font-size: 22px; margin-bottom: 20px; color: var(--color-primary); text-align: center;">⚙️ Admin
+          Login</h3>
+        <form id="admin-login-form">
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="login-username"
+              style="display:block; font-size:14px; margin-bottom:5px; font-weight:500;">Username</label>
+            <input type="text" id="login-username" class="form-control" placeholder="Enter username" required
+              style="width:100%; padding:10px; border:1px solid var(--color-border); border-radius:var(--border-radius-input); outline:none;">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="login-password"
+              style="display:block; font-size:14px; margin-bottom:5px; font-weight:500;">Password</label>
+            <input type="password" id="login-password" class="form-control" placeholder="Enter password" required
+              style="width:100%; padding:10px; border:1px solid var(--color-border); border-radius:var(--border-radius-input); outline:none;">
+          </div>
+          <div id="login-error-msg"
+            style="color: #d9534f; font-size: 13px; margin-bottom: 15px; text-align: center; display: none;">Invalid
+            username or password!</div>
+          <button type="submit" class="btn btn-block"
+            style="background-color: var(--color-primary); color: white; width:100%; border:none; padding:12px; font-weight:bold;">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- BLOG DETAIL MODAL -->
+    <div class="modal-overlay" id="blog-view-modal">
+      <div class="modal-content" style="max-width: 750px; padding: 0; overflow: hidden; border-radius: 12px;">
+        <button class="modal-close" onclick="closeBlogModal()"
+          style="z-index: 10; color: white; background: rgba(0,0,0,0.5); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; top: 15px; right: 15px;">&times;</button>
+        <div style="position: relative; height: 280px; width: 100%;">
+          <img id="blog-modal-image" src="" alt="Blog Cover" style="width: 100%; height: 100%; object-fit: cover;">
+          <div
+            style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 25px; color: white;">
+            <span id="blog-modal-meta"
+              style="font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;"></span>
+            <h3 id="blog-modal-title" style="font-size: 26px; margin: 0; line-height: 1.3; font-weight: 700;"></h3>
+          </div>
+        </div>
+        <div style="padding: 30px; max-height: 400px; overflow-y: auto; background-color: var(--color-bg-white);">
+          <div id="blog-modal-content" style="font-size: 16px; line-height: 1.7; color: var(--color-text);">
+            <!-- Content loaded dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js?v=2.2"></script>
+</body>
+
+</html>
