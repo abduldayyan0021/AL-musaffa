@@ -1045,7 +1045,25 @@ window.closeProductModal = function() {
   document.body.style.overflow = 'auto';
 };
 
-function handleProductSubmit(e) {
+async function uploadImageToSupabaseStorage(file) {
+  if (!supabaseClient) return null;
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+    const { data, error } = await supabaseClient.storage.from('product-images').upload(fileName, file);
+    if (error) {
+      console.error('Error uploading file to storage:', error);
+      return null;
+    }
+    const { data: { publicUrl } } = supabaseClient.storage.from('product-images').getPublicUrl(fileName);
+    return publicUrl;
+  } catch (err) {
+    console.error('Error in uploadImageToSupabaseStorage:', err);
+    return null;
+  }
+}
+
+async function handleProductSubmit(e) {
   e.preventDefault();
 
   const indexVal = document.getElementById('admin-product-index').value;
@@ -1084,6 +1102,26 @@ function handleProductSubmit(e) {
     return;
   }
 
+  // Upload image to Supabase Storage if file is uploaded
+  let finalImage = image;
+  const fileInput = document.getElementById('admin-product-image-file');
+  if (fileInput && fileInput.files && fileInput.files[0] && supabaseClient) {
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerText : 'Save Product';
+    if (submitBtn) {
+      submitBtn.innerText = 'Uploading Image...';
+      submitBtn.disabled = true;
+    }
+    const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
+    if (uploadedUrl) {
+      finalImage = uploadedUrl;
+    }
+    if (submitBtn) {
+      submitBtn.innerText = originalText;
+      submitBtn.disabled = false;
+    }
+  }
+
   const productData = {
     id: indexVal !== '' ? products[indexVal].id : name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
     name,
@@ -1091,7 +1129,7 @@ function handleProductSubmit(e) {
     description,
     rating,
     reviews: indexVal !== '' ? products[indexVal].reviews : Math.floor(10 + Math.random() * 90),
-    image,
+    image: finalImage,
     variants,
     benefits,
     inStock,
@@ -1239,7 +1277,7 @@ window.autoGenerateCategorySlug = function(nameVal) {
   }
 };
 
-function handleCategorySubmit(e) {
+async function handleCategorySubmit(e) {
   e.preventDefault();
 
   const indexVal = document.getElementById('admin-category-index').value;
@@ -1265,7 +1303,27 @@ function handleCategorySubmit(e) {
     return;
   }
 
-  const categoryData = { name, filter, img };
+  // Upload image to Supabase Storage if file is uploaded
+  let finalImg = img;
+  const fileInput = document.getElementById('admin-category-image-file');
+  if (fileInput && fileInput.files && fileInput.files[0] && supabaseClient) {
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerText : 'Save Category';
+    if (submitBtn) {
+      submitBtn.innerText = 'Uploading Image...';
+      submitBtn.disabled = true;
+    }
+    const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
+    if (uploadedUrl) {
+      finalImg = uploadedUrl;
+    }
+    if (submitBtn) {
+      submitBtn.innerText = originalText;
+      submitBtn.disabled = false;
+    }
+  }
+
+  const categoryData = { name, filter, img: finalImg };
 
   if (indexVal !== '') {
     // If slug changed, update all products belonging to the old slug
@@ -1480,7 +1538,7 @@ window.updateBannerUiPreview = function(src) {
   }
 };
 
-function handleBannerSubmit(e) {
+async function handleBannerSubmit(e) {
   e.preventDefault();
   
   const type = document.getElementById('admin-banner-type').value;
@@ -1488,14 +1546,34 @@ function handleBannerSubmit(e) {
   const image = document.getElementById('admin-banner-image').value.trim();
   const title = document.getElementById('admin-banner-title').value.trim();
   
+  // Upload image to Supabase Storage if file is uploaded
+  let finalImage = image;
+  const fileInput = document.getElementById('admin-banner-image-file');
+  if (fileInput && fileInput.files && fileInput.files[0] && supabaseClient) {
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerText : 'Save Banner';
+    if (submitBtn) {
+      submitBtn.innerText = 'Uploading Image...';
+      submitBtn.disabled = true;
+    }
+    const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
+    if (uploadedUrl) {
+      finalImage = uploadedUrl;
+    }
+    if (submitBtn) {
+      submitBtn.innerText = originalText;
+      submitBtn.disabled = false;
+    }
+  }
+
   let bannerData = {};
   if (type === 'hero') {
     const link = document.getElementById('admin-banner-link').value.trim();
-    bannerData = { image, alt: title, link };
+    bannerData = { image: finalImage, alt: title, link };
   } else {
     const subtitle = document.getElementById('admin-banner-subtitle').value.trim();
     const category = document.getElementById('admin-banner-category').value;
-    bannerData = { image, subtitle, title, category };
+    bannerData = { image: finalImage, subtitle, title, category };
   }
   
   if (indexVal !== '') {
@@ -1721,7 +1799,7 @@ window.updateBlogImagePreview = function(src) {
   }
 };
 
-function handleBlogSubmit(e) {
+async function handleBlogSubmit(e) {
   e.preventDefault();
 
   const indexVal = document.getElementById('admin-blog-index').value;
@@ -1732,7 +1810,27 @@ function handleBlogSubmit(e) {
   const excerpt = document.getElementById('admin-blog-excerpt').value.trim();
   const content = document.getElementById('admin-blog-content').value.trim();
 
-  const bData = { title, readTime, date, image, excerpt, content };
+  // Upload image to Supabase Storage if file is uploaded
+  let finalImage = image;
+  const fileInput = document.getElementById('admin-blog-image-file');
+  if (fileInput && fileInput.files && fileInput.files[0] && supabaseClient) {
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerText : 'Save Blog Post';
+    if (submitBtn) {
+      submitBtn.innerText = 'Uploading Image...';
+      submitBtn.disabled = true;
+    }
+    const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
+    if (uploadedUrl) {
+      finalImage = uploadedUrl;
+    }
+    if (submitBtn) {
+      submitBtn.innerText = originalText;
+      submitBtn.disabled = false;
+    }
+  }
+
+  const bData = { title, readTime, date, image: finalImage, excerpt, content };
 
   if (indexVal !== '') {
     blogs[indexVal] = bData;
