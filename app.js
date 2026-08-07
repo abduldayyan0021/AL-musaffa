@@ -283,8 +283,8 @@ async function initApp() {
           rating: parseFloat(p.rating),
           reviews: p.reviews,
           image: p.image,
-          variants: typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants,
-          benefits: p.benefits,
+          variants: p.variants ? (typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants) : [],
+          benefits: p.benefits || [],
           inStock: p.in_stock,
           featured: p.featured
         }));
@@ -915,20 +915,21 @@ function renderProducts() {
 
   // Sort products
   if (currentSort === 'price-low') {
-    filteredProducts.sort((a, b) => a.variants[0].price - b.variants[0].price);
+    filteredProducts.sort((a, b) => ((a.variants && a.variants[0]) ? a.variants[0].price : 0) - ((b.variants && b.variants[0]) ? b.variants[0].price : 0));
   } else if (currentSort === 'price-high') {
-    filteredProducts.sort((a, b) => b.variants[0].price - a.variants[0].price);
+    filteredProducts.sort((a, b) => ((b.variants && b.variants[0]) ? b.variants[0].price : 0) - ((a.variants && a.variants[0]) ? a.variants[0].price : 0));
   } else if (currentSort === 'rating') {
     filteredProducts.sort((a, b) => b.rating - a.rating);
   }
 
   // HTML Rendering
   productContainer.innerHTML = filteredProducts.map(p => {
-    const minPrice = p.variants[0].price;
-    const maxPrice = p.variants[p.variants.length - 1].price;
-    const comparePrice = p.variants[0].originalPrice;
+    const variants = p.variants && p.variants.length > 0 ? p.variants : [{ size: 'Standard', price: 0 }];
+    const minPrice = variants[0].price;
+    const maxPrice = variants[variants.length - 1].price;
+    const comparePrice = variants[0].originalPrice;
 
-    const priceDisplay = p.variants.length > 1
+    const priceDisplay = variants.length > 1
       ? `Rs. ${minPrice} - Rs. ${maxPrice}`
       : `Rs. ${minPrice}`;
 
@@ -1007,7 +1008,7 @@ function handleSearch(query, resultsOverlay) {
         <img src="${p.image}" alt="${p.name}" onerror="this.src='images/logo.png'">
         <div>
           <div class="search-result-name">${p.name}</div>
-          <div class="search-result-price">Rs. ${p.variants[0].price}</div>
+          <div class="search-result-price">Rs. ${(p.variants && p.variants[0]) ? p.variants[0].price : 0}</div>
         </div>
       </div>
     `).join('');
@@ -1027,7 +1028,7 @@ window.openProductDetail = function (productId) {
   if (!product) return;
 
   currentDetailProduct = product;
-  currentDetailVariant = product.variants[0];
+  currentDetailVariant = (product.variants && product.variants[0]) ? product.variants[0] : { size: 'Standard', price: 0 };
 
   const modal = document.getElementById('product-detail-modal');
   const modalContentContainer = document.getElementById('modal-product-content');
@@ -1040,7 +1041,8 @@ window.openProductDetail = function (productId) {
   }
 
   // Variant options chips
-  const variantChips = product.variants.map((v, index) => `
+  const variants = product.variants && product.variants.length > 0 ? product.variants : [{ size: 'Standard', price: 0 }];
+    const variantChips = variants.map((v, index) => `
     <button class="variant-chip ${index === 0 ? 'active' : ''}" 
             onclick="selectDetailVariant(${index}, this)">
       ${v.size}
@@ -1102,7 +1104,7 @@ window.closeProductDetail = function () {
 
 window.selectDetailVariant = function (index, element) {
   if (!currentDetailProduct) return;
-  currentDetailVariant = currentDetailProduct.variants[index];
+  currentDetailVariant = (currentDetailProduct.variants && currentDetailProduct.variants[index]) ? currentDetailProduct.variants[index] : { size: 'Standard', price: 0 };
 
   // Update active chip UI
   const chips = document.querySelectorAll('.variant-chip');
@@ -1185,7 +1187,8 @@ function addToCart(productId, variantSize, quantity) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-  const variant = product.variants.find(v => v.size === variantSize);
+  const variants = product.variants && product.variants.length > 0 ? product.variants : [];
+  const variant = variants.find(v => v.size === variantSize);
   if (!variant) return;
 
   const cartKey = `${productId}_${variantSize}`;
