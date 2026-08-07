@@ -1,6 +1,6 @@
 // SUPABASE CONFIGURATION
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://uskxmnshrobcqufnffsa.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_HIarZyAMv0Ck5wTuzC3vww_NDK9N8iV';
 let supabaseClient = null;
 
 try {
