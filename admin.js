@@ -650,6 +650,18 @@ function initAdminDashboard() {
     });
   }
 
+  // Banner Mobile Image File Upload logic
+  const bannerMobileFileInput = document.getElementById('admin-banner-mobile-image-file');
+  const bannerMobileImageInput = document.getElementById('admin-banner-mobile-image');
+  if (bannerMobileFileInput && bannerMobileImageInput) {
+    bannerMobileFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        compressImageAndSave(file, bannerMobileImageInput, updateBannerMobileUiPreview, 1920, 0.95);
+      }
+    });
+  }
+
   // Banner Modal Form Submission
   const bannerForm = document.getElementById('banner-admin-form');
   if (bannerForm) {
