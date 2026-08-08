@@ -724,7 +724,7 @@ function initAdminDashboard() {
 }
 
 // TAB NAVIGATION CONTROL
-window.switchAdminTab = function(tabName) {
+function switchAdminTab(tabName) {
   const tabs = document.querySelectorAll('.admin-tab');
   tabs.forEach(t => t.classList.remove('active'));
 
@@ -765,7 +765,8 @@ window.switchAdminTab = function(tabName) {
   } else if (tabName === 'settings') {
     populateSettingsForm();
   }
-};
+}
+window.switchAdminTab = switchAdminTab;
 
 // DASHBOARD CALCULATIONS & RENDER
 function renderDashboardStats() {
@@ -868,7 +869,7 @@ function renderOrdersTable() {
   }).join('');
 }
 
-window.updateOrderStatus = function(orderId, newStatus) {
+function updateOrderStatus(orderId, newStatus) {
   const index = orders.findIndex(o => o.orderId === orderId);
   if (index === -1) return;
 
@@ -877,9 +878,10 @@ window.updateOrderStatus = function(orderId, newStatus) {
   
   renderDashboardStats();
   renderOrdersTable();
-};
+}
+window.updateOrderStatus = updateOrderStatus;
 
-window.deleteOrder = function(orderId) {
+function deleteOrder(orderId) {
   if (!confirm(`Are you sure you want to delete order ${orderId}?`)) return;
 
   orders = orders.filter(o => o.orderId !== orderId);
@@ -887,7 +889,8 @@ window.deleteOrder = function(orderId) {
 
   renderDashboardStats();
   renderOrdersTable();
-};
+}
+window.deleteOrder = deleteOrder;
 
 // PRODUCTS CATALOG MANAGER
 function renderInventoryTable() {
@@ -935,13 +938,14 @@ function renderInventoryTable() {
   }).join('');
 }
 
-window.toggleStockStatus = function(index) {
+function toggleStockStatus(index) {
   products[index].inStock = !products[index].inStock;
   saveToDb('al_musafa_products', products);
   renderInventoryTable();
-};
+}
+window.toggleStockStatus = toggleStockStatus;
 
-window.deleteProduct = function(index) {
+function deleteProduct(index) {
   if (!confirm(`Are you sure you want to delete "${products[index].name}"?`)) return;
 
   products.splice(index, 1);
@@ -949,12 +953,13 @@ window.deleteProduct = function(index) {
   
   renderDashboardStats();
   renderInventoryTable();
-};
+}
+window.deleteProduct = deleteProduct;
 
 // DYNAMIC VARIANT FORM ROWS IN MODAL
 let activeVariantRowsCount = 0;
 
-window.addVariantFormRow = function(sizeVal = '', priceVal = '', origVal = '') {
+function addVariantFormRow(sizeVal = '', priceVal = '', origVal = '') {
   const container = document.getElementById('variants-form-list');
   const index = activeVariantRowsCount++;
 
@@ -976,18 +981,20 @@ window.addVariantFormRow = function(sizeVal = '', priceVal = '', origVal = '') {
   `;
 
   container.appendChild(row);
-};
+}
+window.addVariantFormRow = addVariantFormRow;
 
-window.removeVariantFormRow = function(rowIndex) {
+function removeVariantFormRow(rowIndex) {
   const row = document.getElementById(`variant-row-${rowIndex}`);
   if (row) {
     row.remove();
   }
-};
+}
+window.removeVariantFormRow = removeVariantFormRow;
 
 // ADD / EDIT PRODUCT MODAL CONTROLS
 
-window.addProductImageInputRow = function(urlStr = '', canDelete = true) {
+function addProductImageInputRow(urlStr = '', canDelete = true) {
   const listContainer = document.getElementById('admin-product-images-list');
   if (!listContainer) return;
 
@@ -1111,7 +1118,8 @@ window.addProductImageInputRow = function(urlStr = '', canDelete = true) {
   rowDiv.appendChild(inputRow);
   rowDiv.appendChild(uploadRow);
   listContainer.appendChild(rowDiv);
-};
+}
+window.addProductImageInputRow = addProductImageInputRow;
 
 function openProductModal(productIndex = null) {
   const modal = document.getElementById('product-form-modal');
@@ -1551,7 +1559,7 @@ function updateCategoryUiPreview(src) {
 window.updateCategoryUiPreview = updateCategoryUiPreview;
 
 // BANNERS MANAGER CRUD
-window.renderBannersTable = function() {
+function renderBannersTable() {
   // 1. Render Hero Table
   const heroTableBody = document.getElementById('hero-banners-table');
   if (heroTableBody) {
@@ -1606,7 +1614,8 @@ window.renderBannersTable = function() {
       }).join('');
     }
   }
-};
+}
+window.renderBannersTable = renderBannersTable;
 
 function openBannerModal(type, bannerIndex = null) {
   const modal = document.getElementById('banner-form-modal');
