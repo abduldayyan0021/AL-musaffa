@@ -1103,8 +1103,8 @@ window.addProductImageInputRow = function(urlStr = '', canDelete = true) {
 
 window.openProductModal = function(productIndex = null) {
   const modal = document.getElementById('product-form-modal');
-  const modalTitle = document.getElementById('product-modal-title');
-  const form = document.getElementById('product-form');
+  const modalTitle = document.getElementById('modal-form-title');
+  const form = document.getElementById('product-admin-form');
   const variantsList = document.getElementById('variants-form-list');
   const indexField = document.getElementById('admin-product-index');
 
