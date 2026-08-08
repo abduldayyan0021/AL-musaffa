@@ -577,11 +577,20 @@ function renderBanners() {
         slideLink.style.width = `${100 / N}%`;
         slideLink.style.flex = `0 0 ${100 / N}%`;
         
+        const picture = document.createElement('picture');
+        if (b.mobile_image) {
+          const source = document.createElement('source');
+          source.media = '(max-width: 767px)';
+          source.srcset = b.mobile_image;
+          picture.appendChild(source);
+        }
+        
         const img = document.createElement('img');
         img.src = b.image;
         img.alt = b.alt || 'AL MUSAFFA Banner';
+        picture.appendChild(img);
         
-        slideLink.appendChild(img);
+        slideLink.appendChild(picture);
         slidesContainer.appendChild(slideLink);
         
         // Render dot

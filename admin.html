@@ -601,6 +601,31 @@
               For best performance, upload smaller, web-optimized images.</span>
           </div>
 
+          <div class="form-group" id="banner-mobile-image-group">
+            <label for="admin-banner-mobile-image">Mobile Banner Image URL / Preset (Optional)</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <input type="text" id="admin-banner-mobile-image" class="form-control" placeholder="e.g. images/slider2_mobile.png">
+              <select id="admin-banner-mobile-image-presets" class="form-control" style="width: 130px; flex-shrink: 0;"
+                onchange="if(this.value) { document.getElementById('admin-banner-mobile-image').value = this.value; updateBannerMobileUiPreview(this.value); }">
+                <option value="">Preset</option>
+                <option value="images/PURE TRADITION,DELIVERED...png">Hero 1</option>
+                <option value="images/slider2.png">Hero 2</option>
+                <option value="images/slider3.png">Hero 3</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="file" id="admin-banner-mobile-image-file" class="form-control" accept="image/*"
+                style="padding: 6px 12px; font-size: 14px;">
+              <div id="admin-banner-mobile-image-preview-container"
+                style="width: 60px; height: 60px; border-radius: 6px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: var(--color-bg-light); flex-shrink: 0;">
+                <img id="admin-banner-mobile-image-preview" src="images/logo.png"
+                  style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+            </div>
+            <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 4px;">Tip:
+              Upload a vertical or square crop image specifically for mobile viewports (e.g. 16:9 or 1:1 aspect ratio).</span>
+          </div>
+
           <div style="display: flex; gap: 15px; margin-top: 25px;">
             <button type="submit" class="btn" style="flex-grow:1;">Save Banner</button>
             <button type="button" class="btn btn-secondary" onclick="closeBannerModal()">Cancel</button>

@@ -1615,13 +1615,23 @@ window.openBannerModal = function(type, bannerIndex = null) {
   const subtitleGroup = document.getElementById('banner-subtitle-group');
   const linkGroup = document.getElementById('banner-link-group');
   const categoryGroup = document.getElementById('banner-category-group');
+  const mobileImageGroup = document.getElementById('banner-mobile-image-group');
   
   form.reset();
   if (fileInput) fileInput.value = '';
   updateBannerUiPreview('images/logo.png');
+
+  const mobileImageInput = document.getElementById('admin-banner-mobile-image');
+  const mobileFileInput = document.getElementById('admin-banner-mobile-image-file');
+  if (mobileImageInput) mobileImageInput.value = '';
+  if (mobileFileInput) mobileFileInput.value = '';
+  updateBannerMobileUiPreview('images/logo.png');
   
   const presetsSelect = document.getElementById('admin-banner-image-presets');
   if (presetsSelect) presetsSelect.value = '';
+
+  const mobilePresetsSelect = document.getElementById('admin-banner-mobile-image-presets');
+  if (mobilePresetsSelect) mobilePresetsSelect.value = '';
   
   typeField.value = type;
   indexField.value = bannerIndex !== null ? bannerIndex : '';
@@ -1637,6 +1647,7 @@ window.openBannerModal = function(type, bannerIndex = null) {
     subtitleGroup.style.display = 'none';
     linkGroup.style.display = 'block';
     categoryGroup.style.display = 'none';
+    if (mobileImageGroup) mobileImageGroup.style.display = 'block';
     
     document.getElementById('admin-banner-subtitle').required = false;
     document.getElementById('admin-banner-link').required = true;
@@ -1646,6 +1657,7 @@ window.openBannerModal = function(type, bannerIndex = null) {
     subtitleGroup.style.display = 'block';
     linkGroup.style.display = 'none';
     categoryGroup.style.display = 'block';
+    if (mobileImageGroup) mobileImageGroup.style.display = 'none';
     
     document.getElementById('admin-banner-subtitle').required = true;
     document.getElementById('admin-banner-link').required = false;
@@ -1660,6 +1672,17 @@ window.openBannerModal = function(type, bannerIndex = null) {
     if (type === 'hero') {
       document.getElementById('admin-banner-title').value = b.alt || '';
       document.getElementById('admin-banner-link').value = b.link || '';
+      if (b.mobile_image && mobileImageInput) {
+        mobileImageInput.value = b.mobile_image;
+        updateBannerMobileUiPreview(b.mobile_image);
+        if (mobilePresetsSelect) {
+          if (Array.from(mobilePresetsSelect.options).some(opt => opt.value === b.mobile_image)) {
+            mobilePresetsSelect.value = b.mobile_image;
+          } else {
+            mobilePresetsSelect.value = '';
+          }
+        }
+      }
     } else {
       document.getElementById('admin-banner-title').value = b.title || '';
       document.getElementById('admin-banner-subtitle').value = b.subtitle || '';
@@ -1703,38 +1726,60 @@ window.updateBannerUiPreview = function(src) {
   }
 };
 
+window.updateBannerMobileUiPreview = function(src) {
+  const preview = document.getElementById('admin-banner-mobile-image-preview');
+  if (preview) {
+    preview.src = src || 'images/logo.png';
+  }
+};
+
 async function handleBannerSubmit(e) {
   e.preventDefault();
   
   const type = document.getElementById('admin-banner-type').value;
   const indexVal = document.getElementById('admin-banner-index').value;
   const image = document.getElementById('admin-banner-image').value.trim();
+  const mobileImage = document.getElementById('admin-banner-mobile-image') ? document.getElementById('admin-banner-mobile-image').value.trim() : '';
   const title = document.getElementById('admin-banner-title').value.trim();
   
-  // Upload image to Supabase Storage if file is uploaded
+  // Collect images and upload to Supabase Storage if files are selected
   let finalImage = image;
+  let finalMobileImage = mobileImage;
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = submitBtn ? submitBtn.innerText : 'Save Banner';
+
+  if (submitBtn) {
+    submitBtn.innerText = 'Uploading Images...';
+    submitBtn.disabled = true;
+  }
+
+  // Upload Desktop image
   const fileInput = document.getElementById('admin-banner-image-file');
   if (fileInput && fileInput.files && fileInput.files[0] && supabaseClient) {
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn ? submitBtn.innerText : 'Save Banner';
-    if (submitBtn) {
-      submitBtn.innerText = 'Uploading Image...';
-      submitBtn.disabled = true;
-    }
     const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
     if (uploadedUrl) {
       finalImage = uploadedUrl;
     }
-    if (submitBtn) {
-      submitBtn.innerText = originalText;
-      submitBtn.disabled = false;
+  }
+
+  // Upload Mobile image
+  const mobileFileInput = document.getElementById('admin-banner-mobile-image-file');
+  if (mobileFileInput && mobileFileInput.files && mobileFileInput.files[0] && supabaseClient) {
+    const uploadedUrl = await uploadImageToSupabaseStorage(mobileFileInput.files[0]);
+    if (uploadedUrl) {
+      finalMobileImage = uploadedUrl;
     }
+  }
+
+  if (submitBtn) {
+    submitBtn.innerText = originalText;
+    submitBtn.disabled = false;
   }
 
   let bannerData = {};
   if (type === 'hero') {
     const link = document.getElementById('admin-banner-link').value.trim();
-    bannerData = { image: finalImage, alt: title, link };
+    bannerData = { image: finalImage, mobile_image: finalMobileImage, alt: title, link };
   } else {
     const subtitle = document.getElementById('admin-banner-subtitle').value.trim();
     const category = document.getElementById('admin-banner-category').value;

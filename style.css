@@ -339,6 +339,12 @@ img {
   display: block;
 }
 
+.hero-slide picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .hero-slide img {
   width: 100%;
   max-width: none;
