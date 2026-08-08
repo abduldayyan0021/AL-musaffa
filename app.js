@@ -428,11 +428,21 @@ async function initApp() {
   const adminLoginForm = document.getElementById('admin-login-form');
   const loginErrorMsg = document.getElementById('login-error-msg');
 
+  const footerAdminLink = document.getElementById('footer-admin-link');
+  const openLoginModalFn = () => {
+    adminLoginModal.classList.add('active');
+    if (loginErrorMsg) loginErrorMsg.style.display = 'none';
+    if (adminLoginForm) adminLoginForm.reset();
+  };
+
   if (adminLoginBtn && adminLoginModal) {
-    adminLoginBtn.addEventListener('click', () => {
-      adminLoginModal.classList.add('active');
-      if (loginErrorMsg) loginErrorMsg.style.display = 'none';
-      if (adminLoginForm) adminLoginForm.reset();
+    adminLoginBtn.addEventListener('click', openLoginModalFn);
+  }
+
+  if (footerAdminLink && adminLoginModal) {
+    footerAdminLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openLoginModalFn();
     });
   }
 
