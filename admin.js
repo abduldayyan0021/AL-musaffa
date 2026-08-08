@@ -1588,7 +1588,7 @@ window.renderBannersTable = function() {
   }
 };
 
-window.openBannerModal = function(type, bannerIndex = null) {
+function openBannerModal(type, bannerIndex = null) {
   const modal = document.getElementById('banner-form-modal');
   const form = document.getElementById('banner-admin-form');
   const modalTitle = document.getElementById('banner-modal-form-title');
@@ -1695,29 +1695,33 @@ window.openBannerModal = function(type, bannerIndex = null) {
   
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-};
+}
+window.openBannerModal = openBannerModal;
 
-window.closeBannerModal = function() {
+function closeBannerModal() {
   const modal = document.getElementById('banner-form-modal');
   if (modal) {
     modal.classList.remove('active');
   }
   document.body.style.overflow = 'auto';
-};
+}
+window.closeBannerModal = closeBannerModal;
 
-window.updateBannerUiPreview = function(src) {
+function updateBannerUiPreview(src) {
   const preview = document.getElementById('admin-banner-image-preview');
   if (preview) {
     preview.src = src || 'images/logo.png';
   }
-};
+}
+window.updateBannerUiPreview = updateBannerUiPreview;
 
-window.updateBannerMobileUiPreview = function(src) {
+function updateBannerMobileUiPreview(src) {
   const preview = document.getElementById('admin-banner-mobile-image-preview');
   if (preview) {
     preview.src = src || 'images/logo.png';
   }
-};
+}
+window.updateBannerMobileUiPreview = updateBannerMobileUiPreview;
 
 async function handleBannerSubmit(e) {
   e.preventDefault();
