@@ -974,20 +974,6 @@ window.removeVariantFormRow = function(rowIndex) {
 };
 
 // ADD / EDIT PRODUCT MODAL CONTROLS
-window.openProductModal = function(productIndex = null) {
-  const modal = document.getElementById('product-form-modal');
-  const form = document.getElementById('product-admin-form');
-  const modalTitle = document.getElementById('modal-form-title');
-  const variantsList = document.getElementById('variants-form-list');
-  const indexField = document.getElementById('admin-product-index');
-
-  // Reset form and variables
-  form.reset();
-  variantsList.innerHTML = '';
-  activeVariantRowsCount = 0;
-
-  // Populate dynamic category dropdown
-  populateProductCategoryDropdown();
 
 window.addProductImageInputRow = function(urlStr = '', canDelete = true) {
   const listContainer = document.getElementById('admin-product-images-list');
