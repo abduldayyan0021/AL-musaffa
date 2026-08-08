@@ -896,11 +896,12 @@ function renderInventoryTable() {
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
     const priceRange = p.variants.length > 1 ? `Rs. ${minPrice} - Rs. ${maxPrice}` : `Rs. ${minPrice}`;
+    const firstImage = p.image ? (p.image.startsWith('[') ? JSON.parse(p.image)[0] : p.image) : 'images/logo.png';
 
     return `
       <tr>
         <td>
-          <img src="${p.image}" alt="${p.name}" style="width:50px; height:50px; object-fit:cover; border-radius:6px; border:1px solid var(--color-border);" onerror="this.src='images/logo.png'">
+          <img src="${firstImage}" alt="${p.name}" style="width:50px; height:50px; object-fit:cover; border-radius:6px; border:1px solid var(--color-border);" onerror="this.src='images/logo.png'">
         </td>
         <td><strong>${p.name}</strong></td>
         <td style="text-transform:capitalize;">${p.category}</td>
@@ -988,16 +989,152 @@ window.openProductModal = function(productIndex = null) {
   // Populate dynamic category dropdown
   populateProductCategoryDropdown();
 
-  // Reset image presets select & previews
-  const presetsSelect = document.getElementById('admin-product-image-presets');
-  if (presetsSelect) {
-    presetsSelect.value = '';
+window.addProductImageInputRow = function(urlStr = '', canDelete = true) {
+  const listContainer = document.getElementById('admin-product-images-list');
+  if (!listContainer) return;
+
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'admin-image-row';
+  rowDiv.style.display = 'flex';
+  rowDiv.style.flexDirection = 'column';
+  rowDiv.style.gap = '6px';
+  rowDiv.style.border = '1px dashed var(--color-border)';
+  rowDiv.style.padding = '10px';
+  rowDiv.style.borderRadius = '6px';
+  rowDiv.style.backgroundColor = 'var(--color-bg-light)';
+  rowDiv.style.marginBottom = '6px';
+
+  const inputRow = document.createElement('div');
+  inputRow.style.display = 'flex';
+  inputRow.style.gap = '8px';
+
+  const textInput = document.createElement('input');
+  textInput.type = 'text';
+  textInput.className = 'form-control admin-product-image-url';
+  textInput.placeholder = 'e.g. images/sidr_honey.png';
+  textInput.value = urlStr;
+  textInput.required = true;
+  textInput.style.flex = '1';
+
+  const presetSelect = document.createElement('select');
+  presetSelect.className = 'form-control';
+  presetSelect.style.width = '100px';
+  presetSelect.style.flexShrink = '0';
+  presetSelect.innerHTML = `
+    <option value="">Preset</option>
+    <option value="images/sidr_honey.png">Honey</option>
+    <option value="images/desi_ghee.png">Desi Ghee</option>
+    <option value="images/logo.png">Logo</option>
+  `;
+  presetSelect.onchange = function() {
+    if (this.value) {
+      textInput.value = this.value;
+      const imgPreview = rowDiv.querySelector('.admin-product-image-row-preview');
+      if (imgPreview) imgPreview.src = this.value;
+    }
+  };
+
+  inputRow.appendChild(textInput);
+  inputRow.appendChild(presetSelect);
+
+  if (canDelete) {
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'btn btn-secondary';
+    deleteBtn.style.padding = '6px 12px';
+    deleteBtn.style.color = '#d9534f';
+    deleteBtn.style.border = '1px solid #d9534f';
+    deleteBtn.style.backgroundColor = 'transparent';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.innerHTML = '&times;';
+    deleteBtn.onclick = function() {
+      rowDiv.remove();
+    };
+    inputRow.appendChild(deleteBtn);
   }
-  const fileInput = document.getElementById('admin-product-image-file');
-  if (fileInput) {
-    fileInput.value = '';
+
+  const uploadRow = document.createElement('div');
+  uploadRow.style.display = 'flex';
+  uploadRow.style.gap = '10px';
+  uploadRow.style.alignItems = 'center';
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.className = 'form-control admin-product-image-row-file';
+  fileInput.accept = 'image/*';
+  fileInput.style.padding = '4px 8px';
+  fileInput.style.fontSize = '12px';
+  fileInput.style.flex = '1';
+
+  const previewContainer = document.createElement('div');
+  previewContainer.style.width = '40px';
+  previewContainer.style.height = '40px';
+  previewContainer.style.borderRadius = '4px';
+  previewContainer.style.border = '1px solid var(--color-border)';
+  previewContainer.style.display = 'flex';
+  previewContainer.style.alignItems = 'center';
+  previewContainer.style.justifyContent = 'center';
+  previewContainer.style.overflow = 'hidden';
+  previewContainer.style.backgroundColor = 'white';
+  previewContainer.style.flexShrink = '0';
+
+  const imgPreview = document.createElement('img');
+  imgPreview.className = 'admin-product-image-row-preview';
+  imgPreview.src = urlStr || 'images/logo.png';
+  imgPreview.style.width = '100%';
+  imgPreview.style.height = '100%';
+  imgPreview.style.objectFit = 'cover';
+
+  previewContainer.appendChild(imgPreview);
+  uploadRow.appendChild(fileInput);
+  uploadRow.appendChild(previewContainer);
+
+  // Setup preview change event
+  fileInput.onchange = function() {
+    const file = this.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file!');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        imgPreview.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Update preview if text input changes manually
+  textInput.oninput = function() {
+    imgPreview.src = this.value || 'images/logo.png';
+  };
+
+  rowDiv.appendChild(inputRow);
+  rowDiv.appendChild(uploadRow);
+  listContainer.appendChild(rowDiv);
+};
+
+window.openProductModal = function(productIndex = null) {
+  const modal = document.getElementById('product-form-modal');
+  const modalTitle = document.getElementById('product-modal-title');
+  const form = document.getElementById('product-form');
+  const variantsList = document.getElementById('variants-form-list');
+  const indexField = document.getElementById('admin-product-index');
+
+  // Reset form and variables
+  form.reset();
+  variantsList.innerHTML = '';
+  activeVariantRowsCount = 0;
+
+  // Populate dynamic category dropdown
+  populateProductCategoryDropdown();
+
+  // Reset image list container
+  const imagesListContainer = document.getElementById('admin-product-images-list');
+  if (imagesListContainer) {
+    imagesListContainer.innerHTML = '';
   }
-  updateProductImagePreview('images/logo.png');
 
   if (productIndex !== null) {
     // EDIT MODE
@@ -1008,17 +1145,17 @@ window.openProductModal = function(productIndex = null) {
     document.getElementById('admin-product-name').value = p.name;
     document.getElementById('admin-product-category').value = p.category;
     document.getElementById('admin-product-stock').value = p.inStock.toString();
-    document.getElementById('admin-product-image').value = p.image;
-    updateProductImagePreview(p.image);
 
-    // Set preset dropdown if matches preset option
-    if (presetsSelect) {
-      if (Array.from(presetsSelect.options).some(opt => opt.value === p.image)) {
-        presetsSelect.value = p.image;
-      } else {
-        presetsSelect.value = '';
-      }
+    // Populate images array
+    const productImages = p.image ? (p.image.startsWith('[') ? JSON.parse(p.image) : [p.image]) : [];
+    if (productImages.length === 0) {
+      addProductImageInputRow('', false);
+    } else {
+      productImages.forEach((imgUrl, idx) => {
+        addProductImageInputRow(imgUrl, idx > 0);
+      });
     }
+
     document.getElementById('admin-product-rating').value = p.rating;
     document.getElementById('admin-product-description').value = p.description;
     document.getElementById('admin-product-benefits').value = (p.benefits || []).join('\n');
@@ -1031,6 +1168,7 @@ window.openProductModal = function(productIndex = null) {
     // ADD MODE
     indexField.value = '';
     modalTitle.innerText = 'Add New Product';
+    addProductImageInputRow('', false);
     // Add one empty variant row by default
     addVariantFormRow('', '', '');
   }
@@ -1070,7 +1208,6 @@ async function handleProductSubmit(e) {
   const name = document.getElementById('admin-product-name').value.trim();
   const category = document.getElementById('admin-product-category').value;
   const inStock = document.getElementById('admin-product-stock').value === 'true';
-  const image = document.getElementById('admin-product-image').value;
   const rating = parseFloat(document.getElementById('admin-product-rating').value) || 4.8;
   const description = document.getElementById('admin-product-description').value.trim();
   const benefitsText = document.getElementById('admin-product-benefits').value;
@@ -1102,25 +1239,53 @@ async function handleProductSubmit(e) {
     return;
   }
 
-  // Upload image to Supabase Storage if file is uploaded
-  let finalImage = image;
-  const fileInput = document.getElementById('admin-product-image-file');
-  if (fileInput && fileInput.files && fileInput.files[0] && supabaseClient) {
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn ? submitBtn.innerText : 'Save Product';
-    if (submitBtn) {
-      submitBtn.innerText = 'Uploading Image...';
-      submitBtn.disabled = true;
+  // Collect and upload all image rows
+  const imageRows = document.querySelectorAll('.admin-image-row');
+  const imageUrls = [];
+
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = submitBtn ? submitBtn.innerText : 'Save Product';
+  if (submitBtn) {
+    submitBtn.innerText = 'Uploading Images...';
+    submitBtn.disabled = true;
+  }
+
+  for (let i = 0; i < imageRows.length; i++) {
+    const row = imageRows[i];
+    const textUrlInput = row.querySelector('.admin-product-image-url');
+    const fileInput = row.querySelector('.admin-product-image-row-file');
+    let rowUrl = textUrlInput ? textUrlInput.value.trim() : '';
+
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      if (supabaseClient) {
+        const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
+        if (uploadedUrl) {
+          rowUrl = uploadedUrl;
+        }
+      } else {
+        const imgPreview = row.querySelector('.admin-product-image-row-preview');
+        if (imgPreview && imgPreview.src.startsWith('data:')) {
+          rowUrl = imgPreview.src;
+        }
+      }
     }
-    const uploadedUrl = await uploadImageToSupabaseStorage(fileInput.files[0]);
-    if (uploadedUrl) {
-      finalImage = uploadedUrl;
-    }
-    if (submitBtn) {
-      submitBtn.innerText = originalText;
-      submitBtn.disabled = false;
+
+    if (rowUrl) {
+      imageUrls.push(rowUrl);
     }
   }
+
+  if (submitBtn) {
+    submitBtn.innerText = originalText;
+    submitBtn.disabled = false;
+  }
+
+  if (imageUrls.length === 0) {
+    alert('Please specify or upload at least one product image.');
+    return;
+  }
+
+  const finalImageString = JSON.stringify(imageUrls);
 
   const productData = {
     id: indexVal !== '' ? products[indexVal].id : name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
@@ -1129,7 +1294,7 @@ async function handleProductSubmit(e) {
     description,
     rating,
     reviews: indexVal !== '' ? products[indexVal].reviews : Math.floor(10 + Math.random() * 90),
-    image: finalImage,
+    image: finalImageString,
     variants,
     benefits,
     inStock,

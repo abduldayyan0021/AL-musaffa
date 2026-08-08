@@ -431,31 +431,17 @@
           </div>
 
           <div class="form-row">
-            <div class="form-group">
-              <label for="admin-product-image">Product Image URL / Preset *</label>
-              <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                <input type="text" id="admin-product-image" class="form-control"
-                  placeholder="e.g. images/sidr_honey.png" required>
-                <select id="admin-product-image-presets" class="form-control" style="width: 150px; flex-shrink: 0;"
-                  onchange="if(this.value) { document.getElementById('admin-product-image').value = this.value; updateProductImagePreview(this.value); }">
-                  <option value="">Preset</option>
-                  <option value="images/sidr_honey.png">Honey</option>
-                  <option value="images/desi_ghee.png">Desi Ghee</option>
-                  <option value="images/logo.png">Logo</option>
-                </select>
+            <div class="form-group" style="grid-column: span 2;">
+              <label style="font-weight: 600; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span>Product Images *</span>
+                <button type="button" class="btn btn-sm" onclick="addProductImageInputRow('', true)" style="padding: 4px 10px; font-size: 12px; background-color: var(--color-primary); color: white; border: none; cursor: pointer; font-weight: bold;">+ Add Image Row</button>
+              </label>
+              <div id="admin-product-images-list" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Dynamically populated rows -->
               </div>
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <input type="file" id="admin-product-image-file" class="form-control" accept="image/*"
-                  style="padding: 6px 12px; font-size: 14px;">
-                <div id="admin-product-image-preview-container"
-                  style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: var(--color-bg-light); flex-shrink: 0;">
-                  <img id="admin-product-image-preview" src="images/logo.png"
-                    style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-              </div>
-              <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 4px;">Tip: For
-                best performance, upload smaller, web-optimized images.</span>
+              <span style="font-size: 11px; color: var(--color-text-muted); display: block; margin-top: 6px;">Tip: First image will be used as the primary card photo. Upload files or enter preset paths.</span>
             </div>
+          <div class="form-row">
             <div class="form-group">
               <label for="admin-product-rating">Mock Rating (1-5)</label>
               <input type="number" id="admin-product-rating" class="form-control" value="4.8" min="1" max="5" step="0.1"

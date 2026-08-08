@@ -238,6 +238,38 @@ let currentCategory = 'all';
 let currentSort = 'default';
 let searchQuery = '';
 
+function sanitizeProductsState() {
+  if (!products) return;
+  products = products.map(p => {
+    let images = [];
+    if (p.image) {
+      if (Array.isArray(p.image)) {
+        images = p.image;
+      } else if (typeof p.image === 'string') {
+        if (p.image.startsWith('[')) {
+          try { images = JSON.parse(p.image); } catch(e) { images = [p.image]; }
+        } else {
+          images = [p.image];
+        }
+      }
+    }
+    const primaryImage = images[0] || 'images/logo.png';
+
+    let variants = [];
+    if (p.variants) {
+      variants = typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants;
+    }
+
+    return {
+      ...p,
+      images: images,
+      image: primaryImage,
+      variants: variants ? (variants.length > 0 ? variants : [{ size: 'Standard', price: 0 }]) : [{ size: 'Standard', price: 0 }],
+      benefits: p.benefits || []
+    };
+  });
+}
+
 // DOM Elements & Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -329,6 +361,9 @@ async function initApp() {
   } else {
     loadLocalFallback();
   }
+
+  // Sanitize and ensure backward-compatible product formats
+  sanitizeProductsState();
 
   // Apply settings dynamically
   applyStoreSettings();
@@ -1029,6 +1064,18 @@ function handleSearch(query, resultsOverlay) {
   }
 }
 
+window.changeDetailMainImage = function(imgUrl, thumbEl) {
+  const mainImg = document.getElementById('detail-main-img');
+  if (mainImg) {
+    mainImg.src = imgUrl;
+  }
+  const thumbs = document.querySelectorAll('.detail-thumbnail');
+  thumbs.forEach(t => t.classList.remove('active'));
+  if (thumbEl) {
+    thumbEl.classList.add('active');
+  }
+};
+
 // PRODUCT DETAILS MODAL
 let currentDetailProduct = null;
 let currentDetailVariant = null;
@@ -1067,10 +1114,30 @@ window.openProductDetail = function (productId) {
     </div>
   `).join('');
 
+  const productImages = product.images && product.images.length > 0 ? product.images : [product.image || 'images/logo.png'];
+  
+  // Render gallery thumbnails if there are multiple images
+  let galleryHtml = '';
+  if (productImages.length > 1) {
+    const thumbHtml = productImages.map((imgUrl, idx) => `
+      <div class="detail-thumbnail ${idx === 0 ? 'active' : ''}" onclick="changeDetailMainImage('${imgUrl}', this)">
+        <img src="${imgUrl}" onerror="this.src='images/logo.png'">
+      </div>
+    `).join('');
+    galleryHtml = `
+      <div class="product-detail-thumbnails">
+        ${thumbHtml}
+      </div>
+    `;
+  }
+
   modalContentContainer.innerHTML = `
     <div class="product-detail-layout">
-      <div class="product-detail-images">
-        <img src="${product.image}" alt="${product.name}" onerror="this.src='images/logo.png'">
+      <div class="product-detail-gallery">
+        <div class="product-detail-images">
+          <img id="detail-main-img" src="${productImages[0]}" alt="${product.name}" onerror="this.src='images/logo.png'">
+        </div>
+        ${galleryHtml}
       </div>
       <div class="product-detail-info">
         <h2 class="detail-title">${product.name}</h2>
