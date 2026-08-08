@@ -319,7 +319,7 @@ img {
 
 @media (max-width: 767px) {
   .hero-slider-container {
-    aspect-ratio: 1590 / 495;
+    aspect-ratio: 2 / 1;
   }
 }
 
@@ -2639,5 +2639,15 @@ img {
   .form-row {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .blog-info {
+    padding: 15px;
+  }
+  .blog-img {
+    height: 180px;
   }
 }
