@@ -319,7 +319,7 @@ img {
 
 @media (max-width: 767px) {
   .hero-slider-container {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
   }
 }
 
