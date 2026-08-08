@@ -1113,7 +1113,7 @@ window.addProductImageInputRow = function(urlStr = '', canDelete = true) {
   listContainer.appendChild(rowDiv);
 };
 
-window.openProductModal = function(productIndex = null) {
+function openProductModal(productIndex = null) {
   const modal = document.getElementById('product-form-modal');
   const modalTitle = document.getElementById('modal-form-title');
   const form = document.getElementById('product-admin-form');
@@ -1173,13 +1173,15 @@ window.openProductModal = function(productIndex = null) {
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-};
+}
+window.openProductModal = openProductModal;
 
-window.closeProductModal = function() {
+function closeProductModal() {
   const modal = document.getElementById('product-form-modal');
   modal.classList.remove('active');
   document.body.style.overflow = 'auto';
-};
+}
+window.closeProductModal = closeProductModal;
 
 async function uploadImageToSupabaseStorage(file) {
   if (!supabaseClient) return null;
@@ -1381,7 +1383,7 @@ function renderCategoriesTable() {
   }).join('');
 }
 
-window.openCategoryModal = function(categoryIndex = null) {
+function openCategoryModal(categoryIndex = null) {
   const modal = document.getElementById('category-form-modal');
   const form = document.getElementById('category-admin-form');
   const modalTitle = document.getElementById('category-modal-form-title');
@@ -1421,24 +1423,27 @@ window.openCategoryModal = function(categoryIndex = null) {
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-};
+}
+window.openCategoryModal = openCategoryModal;
 
-window.closeCategoryModal = function() {
+function closeCategoryModal() {
   const modal = document.getElementById('category-form-modal');
   if (modal) {
     modal.classList.remove('active');
   }
   document.body.style.overflow = 'auto';
-};
+}
+window.closeCategoryModal = closeCategoryModal;
 
-window.autoGenerateCategorySlug = function(nameVal) {
+function autoGenerateCategorySlug(nameVal) {
   const slugInput = document.getElementById('admin-category-slug');
   const indexVal = document.getElementById('admin-category-index').value;
   // Auto slug only in add mode
   if (slugInput && indexVal === '') {
     slugInput.value = nameVal.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
-};
+}
+window.autoGenerateCategorySlug = autoGenerateCategorySlug;
 
 async function handleCategorySubmit(e) {
   e.preventDefault();
@@ -1513,7 +1518,7 @@ async function handleCategorySubmit(e) {
   renderInventoryTable();
 }
 
-window.deleteCategory = function(index) {
+function deleteCategory(index) {
   const cat = categories[index];
   if (!confirm(`Are you sure you want to delete the category "${cat.name}"?\nProducts in this category will remain but may be hidden until reassigned.`)) {
     return;
@@ -1525,22 +1530,25 @@ window.deleteCategory = function(index) {
   renderCategoriesTable();
   populateProductCategoryDropdown();
   renderInventoryTable();
-};
+}
+window.deleteCategory = deleteCategory;
 
 // PREVIEW UTILS
-window.updateProductImagePreview = function(src) {
+function updateProductImagePreview(src) {
   const preview = document.getElementById('admin-product-image-preview');
   if (preview) {
     preview.src = src || 'images/logo.png';
   }
-};
+}
+window.updateProductImagePreview = updateProductImagePreview;
 
-window.updateCategoryUiPreview = function(src) {
+function updateCategoryUiPreview(src) {
   const preview = document.getElementById('admin-category-image-preview');
   if (preview) {
     preview.src = src || 'images/logo.png';
   }
-};
+}
+window.updateCategoryUiPreview = updateCategoryUiPreview;
 
 // BANNERS MANAGER CRUD
 window.renderBannersTable = function() {
@@ -1804,7 +1812,7 @@ async function handleBannerSubmit(e) {
   renderBannersTable();
 }
 
-window.deleteBanner = function(type, index) {
+function deleteBanner(type, index) {
   const item = banners[type][index];
   const label = type === 'hero' ? (item.alt || 'Slide') : (item.title || 'Banner');
   
@@ -1815,10 +1823,11 @@ window.deleteBanner = function(type, index) {
   banners[type].splice(index, 1);
   saveToDb('al_musafa_banners', banners);
   renderBannersTable();
-};
+}
+window.deleteBanner = deleteBanner;
 
 // TESTIMONIALS MANAGER CRUD
-window.renderTestimonialsTable = function() {
+function renderTestimonialsTable() {
   const tableBody = document.getElementById('testimonials-table');
   if (!tableBody) return;
 
@@ -1844,9 +1853,10 @@ window.renderTestimonialsTable = function() {
       </tr>
     `;
   }).join('');
-};
+}
+window.renderTestimonialsTable = renderTestimonialsTable;
 
-window.openTestimonialModal = function(index = null) {
+function openTestimonialModal(index = null) {
   const modal = document.getElementById('testimonial-form-modal');
   const form = document.getElementById('testimonial-admin-form');
   const modalTitle = document.getElementById('testimonial-modal-form-title');
@@ -1871,15 +1881,17 @@ window.openTestimonialModal = function(index = null) {
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-};
+}
+window.openTestimonialModal = openTestimonialModal;
 
-window.closeTestimonialModal = function() {
+function closeTestimonialModal() {
   const modal = document.getElementById('testimonial-form-modal');
   if (modal) {
     modal.classList.remove('active');
   }
   document.body.style.overflow = 'auto';
-};
+}
+window.closeTestimonialModal = closeTestimonialModal;
 
 function handleTestimonialSubmit(e) {
   e.preventDefault();
@@ -1903,7 +1915,7 @@ function handleTestimonialSubmit(e) {
   renderTestimonialsTable();
 }
 
-window.deleteTestimonial = function(index) {
+function deleteTestimonial(index) {
   const item = testimonials[index];
   if (!confirm(`Are you sure you want to delete the testimonial from "${item.customer}"?`)) {
     return;
@@ -1912,10 +1924,11 @@ window.deleteTestimonial = function(index) {
   testimonials.splice(index, 1);
   saveToDb('al_musafa_testimonials', testimonials);
   renderTestimonialsTable();
-};
+}
+window.deleteTestimonial = deleteTestimonial;
 
 // BLOGS MANAGER CRUD
-window.renderBlogsTable = function() {
+function renderBlogsTable() {
   const tableBody = document.getElementById('blogs-table');
   if (!tableBody) return;
 
@@ -1943,9 +1956,10 @@ window.renderBlogsTable = function() {
       </tr>
     `;
   }).join('');
-};
+}
+window.renderBlogsTable = renderBlogsTable;
 
-window.openBlogModalAdmin = function(index = null) {
+function openBlogModalAdmin(index = null) {
   const modal = document.getElementById('blog-form-modal');
   const form = document.getElementById('blog-admin-form');
   const modalTitle = document.getElementById('blog-modal-form-title');
@@ -1994,22 +2008,25 @@ window.openBlogModalAdmin = function(index = null) {
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-};
+}
+window.openBlogModalAdmin = openBlogModalAdmin;
 
-window.closeBlogModalAdmin = function() {
+function closeBlogModalAdmin() {
   const modal = document.getElementById('blog-form-modal');
   if (modal) {
     modal.classList.remove('active');
   }
   document.body.style.overflow = 'auto';
-};
+}
+window.closeBlogModalAdmin = closeBlogModalAdmin;
 
-window.updateBlogImagePreview = function(src) {
+function updateBlogImagePreview(src) {
   const preview = document.getElementById('admin-blog-image-preview');
   if (preview) {
     preview.src = src || 'images/logo.png';
   }
-};
+}
+window.updateBlogImagePreview = updateBlogImagePreview;
 
 async function handleBlogSubmit(e) {
   e.preventDefault();
@@ -2055,7 +2072,7 @@ async function handleBlogSubmit(e) {
   renderBlogsTable();
 }
 
-window.deleteBlog = function(index) {
+function deleteBlog(index) {
   const item = blogs[index];
   if (!confirm(`Are you sure you want to delete the blog post "${item.title}"?`)) {
     return;
@@ -2064,9 +2081,10 @@ window.deleteBlog = function(index) {
   blogs.splice(index, 1);
   saveToDb('al_musafa_blogs', blogs);
   renderBlogsTable();
-};
+}
+window.deleteBlog = deleteBlog;
 
-window.saveToDb = async function(key, value) {
+async function saveToDb(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
   if (!supabaseClient) return;
 
@@ -2152,4 +2170,5 @@ window.saveToDb = async function(key, value) {
   } catch (err) {
     console.error('Supabase save failed for key:', key, err);
   }
-};
+}
+window.saveToDb = saveToDb;
