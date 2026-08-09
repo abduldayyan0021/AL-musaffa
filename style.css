@@ -319,7 +319,11 @@ img {
 
 @media (max-width: 767px) {
   .hero-slider-container {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 2 / 3;
+  }
+  .hero-slide img {
+    object-fit: contain;
+    background-color: #1c1512; /* Rich dark cocoa background that matches organic honey/ghee themes */
   }
 }
 
