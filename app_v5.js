@@ -223,7 +223,7 @@ const defaultSettings = {
   storeName: 'AL MUSAFFA',
   email: 'hamidtahir617@gmail.com',
   whatsapp: '0328 9816470',
-  address: 'Sharaqpur Rd, Rehmanpura, Rd, Sharaqpur, Sheikhupura, 39350',
+  address: 'Sharaqpur Rd, Near Jamia Farooqia, Rehmanpura, Sheikhupura, 39350',
   shippingLimit: 3000,
   shippingCharge: 250
 };
@@ -288,7 +288,7 @@ async function initApp() {
           storeName: dbSettings.store_name,
           email: 'hamidtahir617@gmail.com',
           whatsapp: '0328 9816470',
-          address: 'Sharaqpur Rd, Rehmanpura, Rd, Sharaqpur, Sheikhupura, 39350',
+          address: 'Sharaqpur Rd, Near Jamia Farooqia, Rehmanpura, Sheikhupura, 39350',
           shippingLimit: dbSettings.shipping_limit,
           shippingCharge: dbSettings.shipping_charge
         };
