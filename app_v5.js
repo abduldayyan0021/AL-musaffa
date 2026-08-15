@@ -286,9 +286,9 @@ async function initApp() {
       if (!errSettings && dbSettings) {
         settings = {
           storeName: dbSettings.store_name,
-          email: dbSettings.email,
-          whatsapp: dbSettings.whatsapp,
-          address: dbSettings.address,
+          email: 'hamidtahir617@gmail.com',
+          whatsapp: '0328 9816470',
+          address: 'Sharaqpur Rd, Rehmanpura, Rd, Sharaqpur, Sheikhupura, 39350',
           shippingLimit: dbSettings.shipping_limit,
           shippingCharge: dbSettings.shipping_charge
         };
@@ -527,7 +527,7 @@ function applyStoreSettings() {
   // WhatsApp Float Button
   const whatsappFloat = document.querySelector('.whatsapp-float');
   if (whatsappFloat) {
-    whatsappFloat.href = `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}?text=Assalam-o-Alaikum%20AL%20MUSAFFA,%20I%20am%20interested%20in%20your%20products.`;
+    whatsappFloat.href = `https://wa.me/923289816470?text=Assalam-o-Alaikum%20AL%20MUSAFFA,%20I%20am%20interested%20in%20your%20products.`;
   }
 
   // Footer details are hardcoded in index.html as per request
@@ -535,12 +535,12 @@ function applyStoreSettings() {
   // Corporate Orders and Social WhatsApp link updates
   const corporateLink = document.getElementById('footer-corporate-link');
   if (corporateLink) {
-    corporateLink.href = `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}?text=Assalam-o-Alaikum%20AL%20MUSAFFA,%20I%20am%20interested%20in%20placing%20a%20Corporate%20Order.`;
+    corporateLink.href = `https://wa.me/923289816470?text=Assalam-o-Alaikum%20AL%20MUSAFFA,%20I%20am%20interested%20in%20placing%20a%20Corporate%20Order.`;
   }
 
   const socialWhatsapp = document.getElementById('social-whatsapp-link');
   if (socialWhatsapp) {
-    socialWhatsapp.href = `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}`;
+    socialWhatsapp.href = `https://wa.me/923289816470`;
   }
 }
 
