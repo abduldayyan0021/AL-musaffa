@@ -1325,14 +1325,20 @@ async function handleProductSubmit(e) {
   renderDashboardStats();
 }
 
-// STORE SETTINGS CONTROLS
+// STORE SETTINGS CONTROLS (Form disabled in Admin UI)
 function populateSettingsForm() {
-  document.getElementById('settings-store-name').value = settings.storeName;
-  document.getElementById('settings-whatsapp').value = settings.whatsapp;
-  document.getElementById('settings-email').value = settings.email;
-  document.getElementById('settings-shipping-limit').value = settings.shippingLimit;
-  document.getElementById('settings-shipping-charge').value = settings.shippingCharge;
-  document.getElementById('settings-address').value = settings.address;
+  const nameEl = document.getElementById('settings-store-name');
+  if (nameEl) nameEl.value = settings.storeName;
+  const phoneEl = document.getElementById('settings-whatsapp');
+  if (phoneEl) phoneEl.value = settings.whatsapp;
+  const emailEl = document.getElementById('settings-email');
+  if (emailEl) emailEl.value = settings.email;
+  const limitEl = document.getElementById('settings-shipping-limit');
+  if (limitEl) limitEl.value = settings.shippingLimit;
+  const chargeEl = document.getElementById('settings-shipping-charge');
+  if (chargeEl) chargeEl.value = settings.shippingCharge;
+  const addrEl = document.getElementById('settings-address');
+  if (addrEl) addrEl.value = settings.address;
 }
 
 function handleSettingsSubmit(e) {
