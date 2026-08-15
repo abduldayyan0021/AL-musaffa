@@ -298,7 +298,7 @@ async function initApp() {
       const { data: dbCategories, error: errCategories } = await supabaseClient.from('categories').select('*').order('id', { ascending: true });
       if (!errCategories && dbCategories && dbCategories.length > 0) {
         categories = dbCategories.map(c => ({
-          name: c.name,
+          name: (c.name === 'Raw Honey' || c.name === 'Raw honey') ? 'Acacia Honey' : c.name,
           filter: c.filter,
           img: c.img
         }));
@@ -325,9 +325,16 @@ async function initApp() {
       // 4. Load Banners
       const { data: dbBanners, error: errBanners } = await supabaseClient.from('banners').select('*').single();
       if (!errBanners && dbBanners) {
+        let promoList = typeof dbBanners.promo === 'string' ? JSON.parse(dbBanners.promo) : dbBanners.promo;
+        if (Array.isArray(promoList)) {
+          promoList = promoList.map(p => ({
+            ...p,
+            title: (p.title === 'Raw Honey' || p.title === 'Raw honey') ? 'Acacia Honey' : p.title
+          }));
+        }
         banners = {
           hero: typeof dbBanners.hero === 'string' ? JSON.parse(dbBanners.hero) : dbBanners.hero,
-          promo: typeof dbBanners.promo === 'string' ? JSON.parse(dbBanners.promo) : dbBanners.promo
+          promo: promoList
         };
       }
 
