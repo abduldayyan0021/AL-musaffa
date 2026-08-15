@@ -1166,7 +1166,7 @@ window.openProductDetail = function (productId) {
             <input type="number" id="detail-qty-input" class="qty-input" value="1" min="1" readonly>
             <button class="qty-btn" onclick="adjustDetailQty(1)">+</button>
           </div>
-          <button class="btn btn-secondary" style="flex: 1; min-width: 120px; background-color: var(--color-primary); color: white; border: none; border-radius: var(--border-radius-button); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#a3721c'" onmouseout="this.style.backgroundColor='#C48B25'" onclick="addDetailProductToCart()">Add To Cart</button>
+          <button class="btn btn-secondary" style="flex: 1; min-width: 120px; background-color: var(--color-primary); color: white; border: none; border-radius: var(--border-radius-button);" onclick="addDetailProductToCart()">Add To Cart</button>
           <button class="btn" style="flex: 1; min-width: 120px; background-color: var(--color-primary); color: white; border: none; border-radius: var(--border-radius-button); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#a3721c'" onmouseout="this.style.backgroundColor='#C48B25'" onclick="buyNowDetailProduct()">Buy Now</button>
         </div>
 
