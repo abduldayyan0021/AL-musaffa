@@ -29,7 +29,7 @@ const defaultBanners = {
     { image: 'images/slider3.png', alt: 'Royal Nuts - Every jar, a promise of Purity', link: '#catalog-section' }
   ],
   promo: [
-    { image: 'images/112.png', subtitle: '100% Pure', title: 'Raw Honey', category: 'honey' },
+    { image: 'images/112.png', subtitle: '100% Pure', title: 'Acacia Honey', category: 'honey' },
     { image: 'images/DESEI GhEee.png ', subtitle: 'Premium Collection of', title: 'Desi Ghee', category: 'delight' }
   ]
 };
@@ -88,7 +88,7 @@ const defaultBlogs = [
 
 // Default Categories Database (sync with app.js)
 const defaultCategories = [
-  { name: 'Raw Honey', filter: 'honey', img: 'images/sidr_honey.png' },
+  { name: 'Acacia Honey', filter: 'honey', img: 'images/sidr_honey.png' },
   { name: 'Sidr Honey', filter: 'sidr', img: 'images/sidr_honey.png' },
   { name: 'Desi Ghee', filter: 'delight', img: 'images/desi_ghee.png' },
   { name: 'Gift Boxes', filter: 'gift', img: 'images/sidr_honey.png' }

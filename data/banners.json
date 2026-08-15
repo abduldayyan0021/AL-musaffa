@@ -5,7 +5,7 @@
     { "image": "images/slider3.png", "alt": "Royal Nuts - Every jar, a promise of Purity", "link": "#catalog-section" }
   ],
   "promo": [
-    { "image": "images/112.png", "subtitle": "100% Pure", "title": "Raw Honey", "category": "honey" },
+    { "image": "images/112.png", "subtitle": "100% Pure", "title": "Acacia Honey", "category": "honey" },
     { "image": "images/DESEI GhEee.png ", "subtitle": "Premium Collection of", "title": "Desi Ghee", "category": "delight" }
   ]
 }
