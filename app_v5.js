@@ -1160,13 +1160,14 @@ window.openProductDetail = function (productId) {
           </div>
         </div>
 
-        <div class="quantity-add-to-cart">
+        <div class="quantity-add-to-cart" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
           <div class="quantity-selector">
             <button class="qty-btn" onclick="adjustDetailQty(-1)">-</button>
             <input type="number" id="detail-qty-input" class="qty-input" value="1" min="1" readonly>
             <button class="qty-btn" onclick="adjustDetailQty(1)">+</button>
           </div>
-          <button class="btn" style="flex-grow:1" onclick="addDetailProductToCart()">Add To Cart</button>
+          <button class="btn btn-secondary" style="flex: 1; min-width: 120px; background-color: var(--color-primary); color: white;" onclick="addDetailProductToCart()">Add To Cart</button>
+          <button class="btn" style="flex: 1; min-width: 120px; background-color: #27ae60; color: white;" onclick="buyNowDetailProduct()">⚡ Buy Now</button>
         </div>
 
         <div class="product-benefits">
@@ -1218,6 +1219,17 @@ window.addDetailProductToCart = function () {
 
   addToCart(currentDetailProduct.id, currentDetailVariant.size, qty);
   closeProductDetail();
+};
+
+window.buyNowDetailProduct = function () {
+  if (!currentDetailProduct || !currentDetailVariant) return;
+
+  const qtyInput = document.getElementById('detail-qty-input');
+  const qty = parseInt(qtyInput.value) || 1;
+
+  addToCart(currentDetailProduct.id, currentDetailVariant.size, qty);
+  closeProductDetail();
+  goToCheckout();
 };
 
 // CART STATE & DRAWER MANAGEMENT
