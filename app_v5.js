@@ -530,15 +530,7 @@ function applyStoreSettings() {
     whatsappFloat.href = `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}?text=Assalam-o-Alaikum%20AL%20MUSAFFA,%20I%20am%20interested%20in%20your%20products.`;
   }
 
-  // Footer details
-  const footerContactList = document.querySelector('.footer-contact');
-  if (footerContactList) {
-    footerContactList.innerHTML = `
-      <li>📞 ${settings.whatsapp}</li>
-      <li>✉️ ${settings.email}</li>
-      <li>📍 ${settings.address}</li>
-    `;
-  }
+  // Footer details are hardcoded in index.html as per request
 
   // Corporate Orders and Social WhatsApp link updates
   const corporateLink = document.getElementById('footer-corporate-link');
